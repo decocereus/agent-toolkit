@@ -7,30 +7,36 @@
  * Keeps everything in one TypeScript CLI so agents (or humans) can drive Chrome
  * directly via the DevTools protocol without pulling in a large MCP server.
  */
-import { Command } from 'commander';
-import { execSync, spawn } from 'node:child_process';
-import { writeFile } from 'node:fs/promises';
-import http from 'node:http';
-import os from 'node:os';
-import path from 'node:path';
-import readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
-import { inspect } from 'node:util';
-import puppeteer from 'puppeteer-core';
+import { Command } from "commander";
+import { execSync, spawn } from "node:child_process";
+import { writeFile } from "node:fs/promises";
+import http from "node:http";
+import os from "node:os";
+import path from "node:path";
+import readline from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
+import { inspect } from "node:util";
+import puppeteer from "puppeteer-core";
 
 /** Utility type so TypeScript knows the async function constructor */
-type AsyncFunctionCtor = new (...args: string[]) => (...fnArgs: unknown[]) => Promise<unknown>;
+type AsyncFunctionCtor = new (
+  ...args: string[]
+) => (...fnArgs: unknown[]) => Promise<unknown>;
 
 const DEFAULT_PORT = 9222;
-const DEFAULT_PROFILE_DIR = path.join(os.homedir(), '.cache', 'scraping');
-const DEFAULT_CHROME_BIN = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const DEFAULT_PROFILE_DIR = path.join(os.homedir(), ".cache", "scraping");
+const DEFAULT_CHROME_BIN =
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
 function browserURL(port: number): string {
   return `http://localhost:${port}`;
 }
 
 async function connectBrowser(port: number) {
-  return puppeteer.connect({ browserURL: browserURL(port), defaultViewport: null });
+  return puppeteer.connect({
+    browserURL: browserURL(port),
+    defaultViewport: null,
+  });
 }
 
 async function getActivePage(port: number) {
@@ -39,26 +45,43 @@ async function getActivePage(port: number) {
   const page = pages.at(-1);
   if (!page) {
     await browser.disconnect();
-    throw new Error('No active tab found');
+    throw new Error("No active tab found");
   }
   return { browser, page };
 }
 
 const program = new Command();
 program
-  .name('browser-tools')
-  .description('Lightweight Chrome DevTools helpers (no MCP required).')
+  .name("browser-tools")
+  .description("Lightweight Chrome DevTools helpers (no MCP required).")
   .configureHelp({ sortSubcommands: true })
   .showSuggestionAfterError();
 
 program
-  .command('start')
-  .description('Launch Chrome with remote debugging enabled.')
-  .option('-p, --port <number>', 'Remote debugging port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
-  .option('--profile', 'Copy your default Chrome profile before launch.', false)
-  .option('--profile-dir <path>', 'Directory for the temporary Chrome profile.', DEFAULT_PROFILE_DIR)
-  .option('--chrome-path <path>', 'Path to the Chrome binary.', DEFAULT_CHROME_BIN)
-  .option('--kill-existing', 'Stop any running Google Chrome before launch (default: false).', false)
+  .command("start")
+  .description("Launch Chrome with remote debugging enabled.")
+  .option(
+    "-p, --port <number>",
+    "Remote debugging port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
+  .option("--profile", "Copy your default Chrome profile before launch.", false)
+  .option(
+    "--profile-dir <path>",
+    "Directory for the temporary Chrome profile.",
+    DEFAULT_PROFILE_DIR,
+  )
+  .option(
+    "--chrome-path <path>",
+    "Path to the Chrome binary.",
+    DEFAULT_CHROME_BIN,
+  )
+  .option(
+    "--kill-existing",
+    "Stop any running Google Chrome before launch (default: false).",
+    false,
+  )
   .action(async (options) => {
     const { port, profile, profileDir, chromePath, killExisting } = options as {
       port: number;
@@ -70,7 +93,7 @@ program
 
     if (killExisting) {
       try {
-        execSync("killall 'Google Chrome'", { stdio: 'ignore' });
+        execSync("killall 'Google Chrome'", { stdio: "ignore" });
       } catch {
         // ignore missing processes
       }
@@ -78,14 +101,25 @@ program
     }
     execSync(`mkdir -p "${profileDir}"`);
     if (profile) {
-      const source = `${path.join(os.homedir(), 'Library', 'Application Support', 'Google', 'Chrome')}/`;
-      execSync(`rsync -a --delete "${source}" "${profileDir}/"`, { stdio: 'ignore' });
+      const source = `${path.join(os.homedir(), "Library", "Application Support", "Google", "Chrome")}/`;
+      execSync(`rsync -a --delete "${source}" "${profileDir}/"`, {
+        stdio: "ignore",
+      });
     }
 
-    spawn(chromePath, [`--remote-debugging-port=${port}`, `--user-data-dir=${profileDir}`, '--no-first-run', '--disable-popup-blocking'], {
-      detached: true,
-      stdio: 'ignore',
-    }).unref();
+    spawn(
+      chromePath,
+      [
+        `--remote-debugging-port=${port}`,
+        `--user-data-dir=${profileDir}`,
+        "--no-first-run",
+        "--disable-popup-blocking",
+      ],
+      {
+        detached: true,
+        stdio: "ignore",
+      },
+    ).unref();
 
     let connected = false;
     for (let attempt = 0; attempt < 30; attempt++) {
@@ -103,30 +137,37 @@ program
       console.error(`✗ Failed to start Chrome on port ${port}`);
       process.exit(1);
     }
-    console.log(`✓ Chrome listening on http://localhost:${port}${profile ? ' (profile copied)' : ''}`);
+    console.log(
+      `✓ Chrome listening on http://localhost:${port}${profile ? " (profile copied)" : ""}`,
+    );
   });
 
 program
-  .command('nav <url>')
-  .description('Navigate the current tab or open a new tab.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
-  .option('--new', 'Open in a new tab.', false)
+  .command("nav <url>")
+  .description("Navigate the current tab or open a new tab.")
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
+  .option("--new", "Open in a new tab.", false)
   .action(async (url: string, options) => {
     const port = options.port as number;
     const browser = await connectBrowser(port);
     try {
       if (options.new) {
         const page = await browser.newPage();
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
-        console.log('✓ Opened in new tab:', url);
+        await page.goto(url, { waitUntil: "domcontentloaded" });
+        console.log("✓ Opened in new tab:", url);
       } else {
         const pages = await browser.pages();
         const page = pages.at(-1);
         if (!page) {
-          throw new Error('No active tab found');
+          throw new Error("No active tab found");
         }
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
-        console.log('✓ Navigated current tab to:', url);
+        await page.goto(url, { waitUntil: "domcontentloaded" });
+        console.log("✓ Navigated current tab to:", url);
       }
     } finally {
       await browser.disconnect();
@@ -134,12 +175,21 @@ program
   });
 
 program
-  .command('eval <code...>')
-  .description('Evaluate JavaScript in the active page context.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
-  .option('--pretty-print', 'Format array/object results with indentation.', false)
+  .command("eval <code...>")
+  .description("Evaluate JavaScript in the active page context.")
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
+  .option(
+    "--pretty-print",
+    "Format array/object results with indentation.",
+    false,
+  )
   .action(async (code: string[], options) => {
-    const snippet = code.join(' ');
+    const snippet = code.join(" ");
     const port = options.port as number;
     const pretty = Boolean(options.prettyPrint);
     const useColor = process.stdout.isTTY;
@@ -159,7 +209,8 @@ program
     const { browser, page } = await getActivePage(port);
     try {
       const result = await page.evaluate((body) => {
-        const ASYNC_FN = Object.getPrototypeOf(async () => {}).constructor as AsyncFunctionCtor;
+        const ASYNC_FN = Object.getPrototypeOf(async () => {})
+          .constructor as AsyncFunctionCtor;
         return new ASYNC_FN(`return (${body})`)();
       }, snippet);
 
@@ -168,13 +219,13 @@ program
       } else if (Array.isArray(result)) {
         result.forEach((entry, index) => {
           if (index > 0) {
-            console.log('');
+            console.log("");
           }
           Object.entries(entry).forEach(([key, value]) => {
             console.log(`${key}: ${value}`);
           });
         });
-      } else if (typeof result === 'object' && result !== null) {
+      } else if (typeof result === "object" && result !== null) {
         Object.entries(result).forEach(([key, value]) => {
           console.log(`${key}: ${value}`);
         });
@@ -187,19 +238,31 @@ program
   });
 
 program
-  .command('screenshot')
-  .description('Capture the current viewport and print the temp PNG path.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
+  .command("screenshot")
+  .description("Capture the current viewport and print the temp PNG path.")
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
   .action(async (options) => {
     const port = options.port as number;
     const { browser, page } = await getActivePage(port);
     const client = await page.target().createCDPSession();
     try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const filePath = path.join(os.tmpdir(), `screenshot-${timestamp}.png`);
-      const layoutMetrics = await client.send('Page.getLayoutMetrics').catch(() => undefined);
+      const layoutMetrics = await client
+        .send("Page.getLayoutMetrics")
+        .catch(() => undefined);
       const layoutViewport = layoutMetrics?.layoutViewport as
-        | { clientWidth: number; clientHeight: number; pageX?: number; pageY?: number }
+        | {
+            clientWidth: number;
+            clientHeight: number;
+            pageX?: number;
+            pageY?: number;
+          }
         | undefined;
 
       let cssWidth = layoutViewport?.clientWidth;
@@ -237,8 +300,8 @@ program
         return;
       }
 
-      const screenshot = await client.send('Page.captureScreenshot', {
-        format: 'png',
+      const screenshot = await client.send("Page.captureScreenshot", {
+        format: "png",
         fromSurface: true,
         captureBeyondViewport: false,
         clip: {
@@ -250,7 +313,7 @@ program
         },
       });
 
-      await writeFile(filePath, Buffer.from(screenshot.data, 'base64'));
+      await writeFile(filePath, Buffer.from(screenshot.data, "base64"));
       console.log(filePath);
     } finally {
       try {
@@ -263,11 +326,18 @@ program
   });
 
 program
-  .command('pick <message...>')
-  .description('Interactive DOM picker that prints metadata for clicked elements.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
+  .command("pick <message...>")
+  .description(
+    "Interactive DOM picker that prints metadata for clicked elements.",
+  )
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
   .action(async (messageParts: string[], options) => {
-    const message = messageParts.join(' ');
+    const message = messageParts.join(" ");
     const port = options.port as number;
     const { browser, page } = await getActivePage(port);
     try {
@@ -285,31 +355,31 @@ program
             const selections: unknown[] = [];
             const selectedElements = new Set<HTMLElement>();
 
-            const overlay = document.createElement('div');
+            const overlay = document.createElement("div");
             overlay.style.cssText =
-              'position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483647;pointer-events:none';
+              "position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483647;pointer-events:none";
 
-            const highlight = document.createElement('div');
+            const highlight = document.createElement("div");
             highlight.style.cssText =
-              'position:absolute;border:2px solid #3b82f6;background:rgba(59,130,246,0.1);transition:all 0.05s ease';
+              "position:absolute;border:2px solid #3b82f6;background:rgba(59,130,246,0.1);transition:all 0.05s ease";
             overlay.appendChild(highlight);
 
-            const banner = document.createElement('div');
+            const banner = document.createElement("div");
             banner.style.cssText =
-              'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;padding:12px 24px;border-radius:8px;font:14px system-ui;box-shadow:0 4px 12px rgba(0,0,0,0.3);pointer-events:auto;z-index:2147483647';
+              "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;padding:12px 24px;border-radius:8px;font:14px system-ui;box-shadow:0 4px 12px rgba(0,0,0,0.3);pointer-events:auto;z-index:2147483647";
 
             const updateBanner = () => {
               banner.textContent = `${prompt} (${selections.length} selected, Cmd/Ctrl+click to add, Enter to finish, ESC to cancel)`;
             };
 
             const cleanup = () => {
-              document.removeEventListener('mousemove', onMove, true);
-              document.removeEventListener('click', onClick, true);
-              document.removeEventListener('keydown', onKey, true);
+              document.removeEventListener("mousemove", onMove, true);
+              document.removeEventListener("click", onClick, true);
+              document.removeEventListener("keydown", onKey, true);
               overlay.remove();
               banner.remove();
               selectedElements.forEach((el) => {
-                el.style.outline = '';
+                el.style.outline = "";
               });
             };
 
@@ -317,8 +387,10 @@ program
               const parents: string[] = [];
               let current = el.parentElement;
               while (current && current !== document.body) {
-                const id = current.id ? `#${current.id}` : '';
-                const cls = current.className ? `.${current.className.trim().split(/\s+/).join('.')}` : '';
+                const id = current.id ? `#${current.id}` : "";
+                const cls = current.className
+                  ? `.${current.className.trim().split(/\s+/).join(".")}`
+                  : "";
                 parents.push(`${current.tagName.toLowerCase()}${id}${cls}`);
                 current = current.parentElement;
               }
@@ -328,13 +400,17 @@ program
                 class: el.className || null,
                 text: el.textContent?.trim()?.slice(0, 200) || null,
                 html: el.outerHTML.slice(0, 500),
-                parents: parents.join(' > '),
+                parents: parents.join(" > "),
               };
             };
 
             const onMove = (event: MouseEvent) => {
-              const node = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
-              if (!node || overlay.contains(node) || banner.contains(node)) return;
+              const node = document.elementFromPoint(
+                event.clientX,
+                event.clientY,
+              ) as HTMLElement | null;
+              if (!node || overlay.contains(node) || banner.contains(node))
+                return;
               const rect = node.getBoundingClientRect();
               highlight.style.cssText = `position:absolute;border:2px solid #3b82f6;background:rgba(59,130,246,0.1);top:${rect.top}px;left:${rect.left}px;width:${rect.width}px;height:${rect.height}px`;
             };
@@ -342,13 +418,17 @@ program
               if (banner.contains(event.target as Node)) return;
               event.preventDefault();
               event.stopPropagation();
-              const node = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
-              if (!node || overlay.contains(node) || banner.contains(node)) return;
+              const node = document.elementFromPoint(
+                event.clientX,
+                event.clientY,
+              ) as HTMLElement | null;
+              if (!node || overlay.contains(node) || banner.contains(node))
+                return;
 
               if (event.metaKey || event.ctrlKey) {
                 if (!selectedElements.has(node)) {
                   selectedElements.add(node);
-                  node.style.outline = '3px solid #10b981';
+                  node.style.outline = "3px solid #10b981";
                   selections.push(serialize(node));
                   updateBanner();
                 }
@@ -360,18 +440,18 @@ program
             };
 
             const onKey = (event: KeyboardEvent) => {
-              if (event.key === 'Escape') {
+              if (event.key === "Escape") {
                 cleanup();
                 resolve(null);
-              } else if (event.key === 'Enter' && selections.length > 0) {
+              } else if (event.key === "Enter" && selections.length > 0) {
                 cleanup();
                 resolve(selections);
               }
             };
 
-            document.addEventListener('mousemove', onMove, true);
-            document.addEventListener('click', onClick, true);
-            document.addEventListener('keydown', onKey, true);
+            document.addEventListener("mousemove", onMove, true);
+            document.addEventListener("click", onClick, true);
+            document.addEventListener("keydown", onKey, true);
 
             document.body.append(overlay, banner);
             updateBanner();
@@ -379,7 +459,9 @@ program
       });
 
       const result = await page.evaluate((msg) => {
-        const pickFn = (window as Window & { pick?: (message: string) => Promise<unknown> }).pick;
+        const pickFn = (
+          window as Window & { pick?: (message: string) => Promise<unknown> }
+        ).pick;
         if (!pickFn) {
           return null;
         }
@@ -389,13 +471,13 @@ program
       if (Array.isArray(result)) {
         result.forEach((entry, index) => {
           if (index > 0) {
-            console.log('');
+            console.log("");
           }
           Object.entries(entry as object).forEach(([key, value]) => {
             console.log(`${key}: ${value}`);
           });
         });
-      } else if (result && typeof result === 'object') {
+      } else if (result && typeof result === "object") {
         Object.entries(result).forEach(([key, value]) => {
           console.log(`${key}: ${value}`);
         });
@@ -408,15 +490,31 @@ program
   });
 
 program
-  .command('console')
-  .description('Capture and display console logs from the active tab.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
-  .option('--types <list>', 'Comma-separated log types to show (e.g., log,error,warn). Default: all types')
-  .option('--follow', 'Continuous monitoring mode (like tail -f)', false)
-  .option('--timeout <seconds>', 'Capture duration in seconds (default: 5 for one-shot, infinite for --follow)', (value) => Number.parseInt(value, 10))
-  .option('--color', 'Force color output')
-  .option('--no-color', 'Disable color output')
-  .option('--no-serialize', 'Disable object serialization (show raw text only)', false)
+  .command("console")
+  .description("Capture and display console logs from the active tab.")
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
+  .option(
+    "--types <list>",
+    "Comma-separated log types to show (e.g., log,error,warn). Default: all types",
+  )
+  .option("--follow", "Continuous monitoring mode (like tail -f)", false)
+  .option(
+    "--timeout <seconds>",
+    "Capture duration in seconds (default: 5 for one-shot, infinite for --follow)",
+    (value) => Number.parseInt(value, 10),
+  )
+  .option("--color", "Force color output")
+  .option("--no-color", "Disable color output")
+  .option(
+    "--no-serialize",
+    "Disable object serialization (show raw text only)",
+    false,
+  )
   .action(async (options) => {
     const port = options.port as number;
     const follow = options.follow as boolean;
@@ -427,26 +525,31 @@ program
 
     // Track explicit color flags
     const argv = process.argv.slice(2);
-    const colorFlag = argv.includes('--color') ? true : argv.includes('--no-color') ? false : undefined;
+    const colorFlag = argv.includes("--color")
+      ? true
+      : argv.includes("--no-color")
+        ? false
+        : undefined;
     const useColor = colorFlag ?? process.stdout.isTTY;
 
     // Parse types filter
     const normalizeType = (value: string) => {
       const lower = value.toLowerCase();
-      if (lower === 'warning') return 'warn';
+      if (lower === "warning") return "warn";
       return lower;
     };
 
     const allowedTypes = typesFilter
-      ? new Set(typesFilter.split(',').map((t) => normalizeType(t.trim())))
+      ? new Set(typesFilter.split(",").map((t) => normalizeType(t.trim())))
       : null;
 
     // Color functions
-    const colorize = (text: string, colorCode: string) => (useColor ? `\x1b[${colorCode}m${text}\x1b[0m` : text);
-    const red = (text: string) => colorize(text, '31');
-    const yellow = (text: string) => colorize(text, '33');
-    const cyan = (text: string) => colorize(text, '36');
-    const gray = (text: string) => colorize(text, '90');
+    const colorize = (text: string, colorCode: string) =>
+      useColor ? `\x1b[${colorCode}m${text}\x1b[0m` : text;
+    const red = (text: string) => colorize(text, "31");
+    const yellow = (text: string) => colorize(text, "33");
+    const cyan = (text: string) => colorize(text, "36");
+    const gray = (text: string) => colorize(text, "90");
     const white = (text: string) => text;
 
     const typeColors: Record<string, (text: string) => string> = {
@@ -461,25 +564,32 @@ program
 
     const formatTimestamp = () => {
       const now = new Date();
-      return now.toTimeString().split(' ')[0] + '.' + now.getMilliseconds().toString().padStart(3, '0');
+      return (
+        now.toTimeString().split(" ")[0] +
+        "." +
+        now.getMilliseconds().toString().padStart(3, "0")
+      );
     };
 
     const formatValue = (value: any, depth = 0, maxDepth = 10): string => {
-      if (depth > maxDepth) return '[Object]';
-      if (value === null) return 'null';
-      if (value === undefined) return 'undefined';
-      if (typeof value === 'string') return `'${value}'`;
-      if (typeof value === 'number' || typeof value === 'boolean') return String(value);
-      if (typeof value === 'function') return '[Function]';
+      if (depth > maxDepth) return "[Object]";
+      if (value === null) return "null";
+      if (value === undefined) return "undefined";
+      if (typeof value === "string") return `'${value}'`;
+      if (typeof value === "number" || typeof value === "boolean")
+        return String(value);
+      if (typeof value === "function") return "[Function]";
 
       if (Array.isArray(value)) {
         const items = value.map((v) => formatValue(v, depth + 1, maxDepth));
-        return `[ ${items.join(', ')} ]`;
+        return `[ ${items.join(", ")} ]`;
       }
 
-      if (typeof value === 'object') {
-        const entries = Object.entries(value).map(([k, v]) => `${k}: ${formatValue(v, depth + 1, maxDepth)}`);
-        return entries.length > 0 ? `{ ${entries.join(', ')} }` : '{}';
+      if (typeof value === "object") {
+        const entries = Object.entries(value).map(
+          ([k, v]) => `${k}: ${formatValue(v, depth + 1, maxDepth)}`,
+        );
+        return entries.length > 0 ? `{ ${entries.join(", ")} }` : "{}";
       }
 
       return String(value);
@@ -494,30 +604,38 @@ program
               const value = await arg.jsonValue();
               return formatValue(value);
             } catch (error) {
-              const errorMsg = error instanceof Error ? error.message : String(error);
-              if (errorMsg.includes('circular')) return '[Circular]';
-              if (errorMsg.includes('reference chain')) return '[DeepObject]';
-              return '[Unserializable]';
+              const errorMsg =
+                error instanceof Error ? error.message : String(error);
+              if (errorMsg.includes("circular")) return "[Circular]";
+              if (errorMsg.includes("reference chain")) return "[DeepObject]";
+              return "[Unserializable]";
             }
-          })
+          }),
         );
-        return values.join(' ');
+        return values.join(" ");
       } catch {
         return msg.text();
       }
     };
 
-    const formatMessage = (type: string, text: string, location?: { url?: string; lineNumber?: number }) => {
+    const formatMessage = (
+      type: string,
+      text: string,
+      location?: { url?: string; lineNumber?: number },
+    ) => {
       const color = typeColors[type] || white;
       const timestamp = formatTimestamp();
-      const loc = location?.url && location?.lineNumber ? ` ${location.url}:${location.lineNumber}` : '';
+      const loc =
+        location?.url && location?.lineNumber
+          ? ` ${location.url}:${location.lineNumber}`
+          : "";
       return color(`[${type.toUpperCase()}] ${timestamp} ${text}${loc}`);
     };
 
     const { browser, page } = await getActivePage(port);
 
     try {
-      page.on('console', async (msg) => {
+      page.on("console", async (msg) => {
         const type = normalizeType(msg.type());
         if (allowedTypes && !allowedTypes.has(type)) return;
 
@@ -525,16 +643,21 @@ program
         console.log(formatMessage(type, text, msg.location()));
       });
 
-      page.on('pageerror', (error) => {
-        if (allowedTypes && !allowedTypes.has('pageerror') && !allowedTypes.has('error')) return;
-        console.log(formatMessage('pageerror', error.message));
+      page.on("pageerror", (error: any) => {
+        if (
+          allowedTypes &&
+          !allowedTypes.has("pageerror") &&
+          !allowedTypes.has("error")
+        )
+          return;
+        console.log(formatMessage("pageerror", error.message));
       });
 
       if (follow) {
-        console.log(gray('Monitoring console logs (Ctrl+C to stop)...'));
+        console.log(gray("Monitoring console logs (Ctrl+C to stop)..."));
         const waitForExit = () =>
           new Promise<void>((resolve) => {
-            const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGHUP'];
+            const signals: NodeJS.Signals[] = ["SIGINT", "SIGTERM", "SIGHUP"];
             const onSignal = () => {
               cleanup();
               resolve();
@@ -545,10 +668,10 @@ program
             };
             const cleanup = () => {
               signals.forEach((signal) => process.off(signal, onSignal));
-              process.off('beforeExit', onBeforeExit);
+              process.off("beforeExit", onBeforeExit);
             };
             signals.forEach((signal) => process.on(signal, onSignal));
-            process.on('beforeExit', onBeforeExit);
+            process.on("beforeExit", onBeforeExit);
           });
 
         await waitForExit();
@@ -563,40 +686,78 @@ program
   });
 
 program
-  .command('search <query...>')
-  .description('Google search with optional readable content extraction.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
-  .option('-n, --count <number>', 'Number of results to return (default: 5, max: 50)', (value) => Number.parseInt(value, 10), 5)
-  .option('--content', 'Fetch readable content for each result (slower).', false)
-  .option('--timeout <seconds>', 'Per-navigation timeout in seconds (default: 10).', (value) => Number.parseInt(value, 10), 10)
+  .command("search <query...>")
+  .description("Google search with optional readable content extraction.")
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
+  .option(
+    "-n, --count <number>",
+    "Number of results to return (default: 5, max: 50)",
+    (value) => Number.parseInt(value, 10),
+    5,
+  )
+  .option(
+    "--content",
+    "Fetch readable content for each result (slower).",
+    false,
+  )
+  .option(
+    "--timeout <seconds>",
+    "Per-navigation timeout in seconds (default: 10).",
+    (value) => Number.parseInt(value, 10),
+    10,
+  )
   .action(async (queryWords: string[], options) => {
     const port = options.port as number;
     const count = Math.max(1, Math.min(options.count as number, 50));
     const fetchContent = Boolean(options.content);
     const timeoutMs = Math.max(3, (options.timeout as number) ?? 10) * 1000;
-    const query = queryWords.join(' ');
+    const query = queryWords.join(" ");
 
     const { browser, page } = await getActivePage(port);
     try {
-      const results: { title: string; link: string; snippet: string; content?: string }[] = [];
+      const results: {
+        title: string;
+        link: string;
+        snippet: string;
+        content?: string;
+      }[] = [];
       let start = 0;
       while (results.length < count) {
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&start=${start}`;
-        await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: timeoutMs }).catch(() => {});
-        await page.waitForSelector('div.MjjYud', { timeout: 3000 }).catch(() => {});
+        await page
+          .goto(searchUrl, {
+            waitUntil: "domcontentloaded",
+            timeout: timeoutMs,
+          })
+          .catch(() => {});
+        await page
+          .waitForSelector("div.MjjYud", { timeout: 3000 })
+          .catch(() => {});
 
         const pageResults = await page.evaluate(() => {
           const items: { title: string; link: string; snippet: string }[] = [];
-          document.querySelectorAll('div.MjjYud').forEach((result) => {
-            const titleEl = result.querySelector('h3');
-            const linkEl = result.querySelector('a');
-            const snippetEl = result.querySelector('div.VwiC3b, div[data-sncf]');
-            const link = linkEl?.getAttribute('href') ?? '';
-            if (titleEl && linkEl && link && !link.startsWith('https://www.google.com')) {
+          document.querySelectorAll("div.MjjYud").forEach((result) => {
+            const titleEl = result.querySelector("h3");
+            const linkEl = result.querySelector("a");
+            const snippetEl = result.querySelector(
+              "div.VwiC3b, div[data-sncf]",
+            );
+            const link = linkEl?.getAttribute("href") ?? "";
+            if (
+              titleEl &&
+              linkEl &&
+              link &&
+              !link.startsWith("https://www.google.com")
+            ) {
               items.push({
-                title: titleEl.textContent?.trim() ?? '',
+                title: titleEl.textContent?.trim() ?? "",
                 link,
-                snippet: snippetEl?.textContent?.trim() ?? '',
+                snippet: snippetEl?.textContent?.trim() ?? "",
               });
             }
           });
@@ -617,11 +778,17 @@ program
       if (fetchContent) {
         for (const result of results) {
           try {
-            await page.goto(result.link, { waitUntil: 'networkidle2', timeout: timeoutMs }).catch(() => {});
+            await page
+              .goto(result.link, {
+                waitUntil: "networkidle2",
+                timeout: timeoutMs,
+              })
+              .catch(() => {});
             const article = await extractReadableContent(page);
-            result.content = article.content ?? '(No readable content)';
+            result.content = article.content ?? "(No readable content)";
           } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
+            const message =
+              error instanceof Error ? error.message : String(error);
             result.content = `(Error fetching content: ${message})`;
           }
         }
@@ -633,40 +800,57 @@ program
         console.log(`Link: ${r.link}`);
         if (r.snippet) console.log(`Snippet: ${r.snippet}`);
         if (r.content) console.log(`Content:\n${r.content}`);
-        console.log('');
+        console.log("");
       });
 
-      if (results.length === 0) console.log('No results found.');
+      if (results.length === 0) console.log("No results found.");
     } finally {
       await browser.disconnect();
     }
   });
 
 program
-  .command('content <url>')
-  .description('Extract readable content from a URL as markdown-like text.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
-  .option('--timeout <seconds>', 'Navigation timeout in seconds (default: 10).', (value) => Number.parseInt(value, 10), 10)
+  .command("content <url>")
+  .description("Extract readable content from a URL as markdown-like text.")
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
+  .option(
+    "--timeout <seconds>",
+    "Navigation timeout in seconds (default: 10).",
+    (value) => Number.parseInt(value, 10),
+    10,
+  )
   .action(async (url: string, options) => {
     const port = options.port as number;
     const timeoutMs = Math.max(3, (options.timeout as number) ?? 10) * 1000;
     const { browser, page } = await getActivePage(port);
     try {
-      await page.goto(url, { waitUntil: 'networkidle2', timeout: timeoutMs }).catch(() => {});
+      await page
+        .goto(url, { waitUntil: "networkidle2", timeout: timeoutMs })
+        .catch(() => {});
       const article = await extractReadableContent(page);
       console.log(`URL: ${article.url}`);
       if (article.title) console.log(`Title: ${article.title}`);
-      console.log('');
-      console.log(article.content ?? '(No readable content)');
+      console.log("");
+      console.log(article.content ?? "(No readable content)");
     } finally {
       await browser.disconnect();
     }
   });
 
 program
-  .command('cookies')
-  .description('Dump cookies from the active tab as JSON.')
-  .option('--port <number>', 'Debugger port (default: 9222)', (value) => Number.parseInt(value, 10), DEFAULT_PORT)
+  .command("cookies")
+  .description("Dump cookies from the active tab as JSON.")
+  .option(
+    "--port <number>",
+    "Debugger port (default: 9222)",
+    (value) => Number.parseInt(value, 10),
+    DEFAULT_PORT,
+  )
   .action(async (options) => {
     const port = options.port as number;
     const { browser, page } = await getActivePage(port);
@@ -679,14 +863,28 @@ program
   });
 
 program
-  .command('inspect')
-  .description('List Chrome processes launched with --remote-debugging-port and show their open tabs.')
-  .option('--ports <list>', 'Comma-separated list of ports to include.', parseNumberListArg)
-  .option('--pids <list>', 'Comma-separated list of PIDs to include.', parseNumberListArg)
-  .option('--json', 'Emit machine-readable JSON output.', false)
+  .command("inspect")
+  .description(
+    "List Chrome processes launched with --remote-debugging-port and show their open tabs.",
+  )
+  .option(
+    "--ports <list>",
+    "Comma-separated list of ports to include.",
+    parseNumberListArg,
+  )
+  .option(
+    "--pids <list>",
+    "Comma-separated list of PIDs to include.",
+    parseNumberListArg,
+  )
+  .option("--json", "Emit machine-readable JSON output.", false)
   .action(async (options) => {
-    const ports = (options.ports as number[] | undefined)?.filter((entry) => Number.isFinite(entry) && entry > 0);
-    const pids = (options.pids as number[] | undefined)?.filter((entry) => Number.isFinite(entry) && entry > 0);
+    const ports = (options.ports as number[] | undefined)?.filter(
+      (entry) => Number.isFinite(entry) && entry > 0,
+    );
+    const pids = (options.pids as number[] | undefined)?.filter(
+      (entry) => Number.isFinite(entry) && entry > 0,
+    );
     const sessions = await describeChromeSessions({
       ports,
       pids,
@@ -697,22 +895,27 @@ program
       return;
     }
     if (sessions.length === 0) {
-      console.log('No Chrome instances with DevTools ports found.');
+      console.log("No Chrome instances with DevTools ports found.");
       return;
     }
     sessions.forEach((session, index) => {
-      if (index > 0) console.log('');
-      const transport = session.port !== undefined ? `port ${session.port}` : session.usesPipe ? 'debugging pipe' : 'unknown transport';
+      if (index > 0) console.log("");
+      const transport =
+        session.port !== undefined
+          ? `port ${session.port}`
+          : session.usesPipe
+            ? "debugging pipe"
+            : "unknown transport";
       const header = [`Chrome PID ${session.pid}`, `(${transport})`];
       if (session.version?.Browser) header.push(`- ${session.version.Browser}`);
-      console.log(header.join(' '));
+      console.log(header.join(" "));
       if (session.tabs.length === 0) {
-        console.log('  (no tabs reported)');
+        console.log("  (no tabs reported)");
         return;
       }
       session.tabs.forEach((tab, idx) => {
-        const title = tab.title || '(untitled)';
-        const url = tab.url || '(no url)';
+        const title = tab.title || "(untitled)";
+        const url = tab.url || "(no url)";
         console.log(`  Tab ${idx + 1}: ${title}`);
         console.log(`           ${url}`);
       });
@@ -720,36 +923,61 @@ program
   });
 
 program
-  .command('kill')
-  .description('Terminate Chrome instances that have DevTools ports open.')
-  .option('--ports <list>', 'Comma-separated list of ports to target.', parseNumberListArg)
-  .option('--pids <list>', 'Comma-separated list of PIDs to target.', parseNumberListArg)
-  .option('--all', 'Kill every matching Chrome instance.', false)
-  .option('--force', 'Skip the confirmation prompt.', false)
+  .command("kill")
+  .description("Terminate Chrome instances that have DevTools ports open.")
+  .option(
+    "--ports <list>",
+    "Comma-separated list of ports to target.",
+    parseNumberListArg,
+  )
+  .option(
+    "--pids <list>",
+    "Comma-separated list of PIDs to target.",
+    parseNumberListArg,
+  )
+  .option("--all", "Kill every matching Chrome instance.", false)
+  .option("--force", "Skip the confirmation prompt.", false)
   .action(async (options) => {
-    const ports = (options.ports as number[] | undefined)?.filter((entry) => Number.isFinite(entry) && entry > 0);
-    const pids = (options.pids as number[] | undefined)?.filter((entry) => Number.isFinite(entry) && entry > 0);
+    const ports = (options.ports as number[] | undefined)?.filter(
+      (entry) => Number.isFinite(entry) && entry > 0,
+    );
+    const pids = (options.pids as number[] | undefined)?.filter(
+      (entry) => Number.isFinite(entry) && entry > 0,
+    );
     const killAll = Boolean(options.all);
-    if (!killAll && (!ports?.length && !pids?.length)) {
-      console.error('Specify --all, --ports <list>, or --pids <list> to select targets.');
+    if (!killAll && !ports?.length && !pids?.length) {
+      console.error(
+        "Specify --all, --ports <list>, or --pids <list> to select targets.",
+      );
       process.exit(1);
     }
-    const sessions = await describeChromeSessions({ ports, pids, includeAll: killAll });
+    const sessions = await describeChromeSessions({
+      ports,
+      pids,
+      includeAll: killAll,
+    });
     if (sessions.length === 0) {
-      console.log('No matching Chrome instances found.');
+      console.log("No matching Chrome instances found.");
       return;
     }
     if (!options.force) {
-      console.log('About to terminate the following Chrome sessions:');
+      console.log("About to terminate the following Chrome sessions:");
       sessions.forEach((session) => {
-        const transport = session.port !== undefined ? `port ${session.port}` : session.usesPipe ? 'debugging pipe' : 'unknown transport';
+        const transport =
+          session.port !== undefined
+            ? `port ${session.port}`
+            : session.usesPipe
+              ? "debugging pipe"
+              : "unknown transport";
         console.log(`  PID ${session.pid} (${transport})`);
       });
       const rl = readline.createInterface({ input, output });
-      const answer = (await rl.question('Proceed? [y/N] ')).trim().toLowerCase();
+      const answer = (await rl.question("Proceed? [y/N] "))
+        .trim()
+        .toLowerCase();
       rl.close();
-      if (answer !== 'y' && answer !== 'yes') {
-        console.log('Aborted.');
+      if (answer !== "y" && answer !== "yes") {
+        console.log("Aborted.");
         return;
       }
     }
@@ -757,7 +985,12 @@ program
     sessions.forEach((session) => {
       try {
         process.kill(session.pid);
-        const transport = session.port !== undefined ? `port ${session.port}` : session.usesPipe ? 'debugging pipe' : 'unknown transport';
+        const transport =
+          session.port !== undefined
+            ? `port ${session.port}`
+            : session.usesPipe
+              ? "debugging pipe"
+              : "unknown transport";
         console.log(`✓ Killed Chrome PID ${session.pid} (${transport})`);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -796,9 +1029,9 @@ async function ensureReadability(page: any) {
     // ignore
   }
   const scripts = [
-    'https://unpkg.com/@mozilla/readability@0.4.4/Readability.js',
-    'https://unpkg.com/turndown@7.1.2/dist/turndown.js',
-    'https://unpkg.com/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js',
+    "https://unpkg.com/@mozilla/readability@0.4.4/Readability.js",
+    "https://unpkg.com/turndown@7.1.2/dist/turndown.js",
+    "https://unpkg.com/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js",
   ];
   for (const src of scripts) {
     try {
@@ -814,27 +1047,39 @@ async function ensureReadability(page: any) {
   }
 }
 
-async function extractReadableContent(page: any): Promise<{ title?: string; content?: string; url: string }> {
+async function extractReadableContent(
+  page: any,
+): Promise<{ title?: string; content?: string; url: string }> {
   await ensureReadability(page);
   const result = await page.evaluate(() => {
     const asMarkdown = (html: string | null | undefined) => {
-      if (!html) return '';
+      if (!html) return "";
       const TurndownService = (window as any).TurndownService;
       const turndownPluginGfm = (window as any).turndownPluginGfm;
-      if (!TurndownService) return '';
-      const turndown = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' });
+      if (!TurndownService) return "";
+      const turndown = new TurndownService({
+        headingStyle: "atx",
+        codeBlockStyle: "fenced",
+      });
       if (turndownPluginGfm?.gfm) turndown.use(turndownPluginGfm.gfm);
-      return turndown.turndown(html).replace(/\n{3,}/g, '\n\n').trim();
+      return turndown
+        .turndown(html)
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
     };
 
     const fallbackText = () => {
       const main =
-        document.querySelector('main, article, [role="main"], .content, #content') || document.body || document.documentElement;
-      return main?.textContent?.trim() ?? '';
+        document.querySelector(
+          'main, article, [role="main"], .content, #content',
+        ) ||
+        document.body ||
+        document.documentElement;
+      return main?.textContent?.trim() ?? "";
     };
 
     let title = document.title;
-    let content = '';
+    let content = "";
 
     try {
       const Readability = (window as any).Readability;
@@ -842,7 +1087,7 @@ async function extractReadableContent(page: any): Promise<{ title?: string; cont
         const clone = document.cloneNode(true) as Document;
         const article = new Readability(clone).parse();
         title = article?.title || title;
-        content = asMarkdown(article?.content) || article?.textContent || '';
+        content = asMarkdown(article?.content) || article?.textContent || "";
       }
     } catch {
       // ignore readability failures
@@ -863,7 +1108,7 @@ function parseNumberListArg(value: string): number[] {
 function parseNumberList(inputValue: string | undefined): number[] | undefined {
   if (!inputValue) return undefined;
   const parsed = inputValue
-    .split(',')
+    .split(",")
     .map((entry) => Number.parseInt(entry.trim(), 10))
     .filter((value) => Number.isFinite(value));
   return parsed.length > 0 ? parsed : undefined;
@@ -880,7 +1125,8 @@ async function describeChromeSessions(options: {
   const pidSet = new Set(pids ?? []);
   const candidates = processes.filter((proc) => {
     if (includeAll) return true;
-    if (portSet.size > 0 && proc.port !== undefined && portSet.has(proc.port)) return true;
+    if (portSet.size > 0 && proc.port !== undefined && portSet.has(proc.port))
+      return true;
     if (pidSet.size > 0 && pidSet.has(proc.pid)) return true;
     return false;
   });
@@ -890,15 +1136,21 @@ async function describeChromeSessions(options: {
     let filteredTabs: ChromeTabInfo[] = [];
     if (proc.port !== undefined) {
       const [versionResp, tabs] = await Promise.all([
-        fetchJson(`http://localhost:${proc.port}/json/version`).catch(() => undefined),
+        fetchJson(`http://localhost:${proc.port}/json/version`).catch(
+          () => undefined,
+        ),
         fetchJson(`http://localhost:${proc.port}/json/list`).catch(() => []),
       ]);
       version = versionResp as Record<string, string> | undefined;
       filteredTabs = Array.isArray(tabs)
         ? (tabs as ChromeTabInfo[]).filter((tab) => {
-            const type = tab.type?.toLowerCase() ?? '';
-            if (type && type !== 'page' && type !== 'app') {
-              if (!tab.url || tab.url.startsWith('devtools://') || tab.url.startsWith('chrome-extension://')) {
+            const type = tab.type?.toLowerCase() ?? "";
+            if (type && type !== "page" && type !== "app") {
+              if (
+                !tab.url ||
+                tab.url.startsWith("devtools://") ||
+                tab.url.startsWith("chrome-extension://")
+              ) {
                 return false;
               }
             }
@@ -913,20 +1165,22 @@ async function describeChromeSessions(options: {
 }
 
 async function listDevtoolsChromes(): Promise<ChromeProcessInfo[]> {
-  if (process.platform !== 'darwin' && process.platform !== 'linux') {
-    console.warn('Chrome inspection is only supported on macOS and Linux for now.');
+  if (process.platform !== "darwin" && process.platform !== "linux") {
+    console.warn(
+      "Chrome inspection is only supported on macOS and Linux for now.",
+    );
     return [];
   }
-  let output = '';
+  let output = "";
   try {
-    output = execSync('ps -ax -o pid=,command=', { encoding: 'utf8' });
+    output = execSync("ps -ax -o pid=,command=", { encoding: "utf8" });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to enumerate processes: ${message}`);
   }
   const processes: ChromeProcessInfo[] = [];
   output
-    .split('\n')
+    .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
     .forEach((line) => {
@@ -935,7 +1189,11 @@ async function listDevtoolsChromes(): Promise<ChromeProcessInfo[]> {
       const pid = Number.parseInt(match[1], 10);
       const command = match[2];
       if (!Number.isFinite(pid) || pid <= 0) return;
-      if (!/chrome/i.test(command) || (!/--remote-debugging-port/.test(command) && !/--remote-debugging-pipe/.test(command))) {
+      if (
+        !/chrome/i.test(command) ||
+        (!/--remote-debugging-port/.test(command) &&
+          !/--remote-debugging-pipe/.test(command))
+      ) {
         return;
       }
       const portMatch = command.match(/--remote-debugging-port(?:=|\s+)(\d+)/);
@@ -956,9 +1214,9 @@ function fetchJson(url: string, timeoutMs = 2000): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const request = http.get(url, { timeout: timeoutMs }, (response) => {
       const chunks: Buffer[] = [];
-      response.on('data', (chunk) => chunks.push(chunk));
-      response.on('end', () => {
-        const body = Buffer.concat(chunks).toString('utf8');
+      response.on("data", (chunk) => chunks.push(chunk));
+      response.on("end", () => {
+        const body = Buffer.concat(chunks).toString("utf8");
         if ((response.statusCode ?? 500) >= 400) {
           reject(new Error(`HTTP ${response.statusCode} for ${url}`));
           return;
@@ -970,10 +1228,10 @@ function fetchJson(url: string, timeoutMs = 2000): Promise<unknown> {
         }
       });
     });
-    request.on('timeout', () => {
+    request.on("timeout", () => {
       request.destroy(new Error(`Request to ${url} timed out`));
     });
-    request.on('error', (error) => {
+    request.on("error", (error) => {
       reject(error);
     });
   });
