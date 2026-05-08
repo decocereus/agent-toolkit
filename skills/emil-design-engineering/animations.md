@@ -80,7 +80,11 @@ Elements that animate together must use the same easing and duration. Modal + ov
 | Modals, drawers | 200-300ms |
 | Page transitions | 300-400ms |
 
-**Rule:** UI animations should stay under 300ms. Larger elements animate slower than smaller ones.
+**Rules:**
+- UI animations should stay under 300ms
+- Larger elements animate slower than smaller ones
+- Exit animations can be faster than entrances
+- Longer travel distance = longer duration
 
 ## The Frequency Principle
 
@@ -88,7 +92,7 @@ Determine how often users will see the animation:
 
 - **100+ times/day** → No animation (or drastically reduced)
 - **Occasional use** → Standard animation
-- **Rare/first-time** → Can add delight
+- **Rare/first-time** → Can be special
 
 **Example:** Raycast never animates its menu toggle because users open it hundreds of times daily.
 
