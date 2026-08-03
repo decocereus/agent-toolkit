@@ -18,6 +18,7 @@ A comprehensive guide for building polished, accessible web interfaces based on 
 | [Component Design](component-design.md)         | Compound components, composition, props API          |
 | [Marketing](marketing.md)                       | Landing pages, blogs, docs sites                     |
 | [Performance](performance.md)                   | Virtualization, preloading, optimization             |
+| [Design Rules](design-rules.md)                 | Paired right/wrong calls across icons, type, color, IA, interaction, copy |
 
 ## Core Principles
 
