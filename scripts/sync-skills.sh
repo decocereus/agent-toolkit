@@ -177,6 +177,7 @@ check_for_unmanaged_skills() {
     [ -e "$live_path" ] || [ -L "$live_path" ] || continue
     name=$(basename "$live_path")
     [ "$name" = '.system' ] && continue
+    [ -L "$live_path" ] && continue
     [ -f "$live_path/SKILL.md" ] || continue
     if [ ! -f "$source_root/$name/SKILL.md" ]; then
       report_error "$label skill is not in the repository: $live_path"
