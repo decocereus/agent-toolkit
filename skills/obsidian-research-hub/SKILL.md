@@ -9,22 +9,23 @@ Use this skill to keep Codex planning and research visible in Writer and Obsidia
 
 ## Paths
 
-Canonical vault:
+Set the vault path once for the current shell instructions. Override it on a
+machine whose vault is cloned elsewhere:
 
-```text
-/Users/amartyasingh/Documents/personal/obsidian/personal
+```bash
+vault_path=${OBSIDIAN_VAULT_PATH:-"$HOME/Documents/personal/obsidian/personal"}
 ```
 
 Obsidian also knows this link:
 
 ```text
-/Users/amartyasingh/obsidian/personal
+$HOME/obsidian/personal
 ```
 
 Writer command:
 
 ```bash
-writer /Users/amartyasingh/Documents/personal/obsidian/personal
+writer "$vault_path"
 ```
 
 ## Required first step
@@ -34,14 +35,14 @@ Read the vault `AGENTS.md` file completely before you read or write vault notes.
 Check the vault Git state:
 
 ```bash
-git -C /Users/amartyasingh/Documents/personal/obsidian/personal status --short --branch
+git -C "$vault_path" status --short --branch
 ```
 
 When the worktree is clean and the task will write to the vault, update it with:
 
 ```bash
-git -C /Users/amartyasingh/Documents/personal/obsidian/personal fetch origin
-git -C /Users/amartyasingh/Documents/personal/obsidian/personal pull --ff-only origin main
+git -C "$vault_path" fetch origin
+git -C "$vault_path" pull --ff-only origin main
 ```
 
 If the worktree has changes, do not pull, reset, clean, or overwrite them. Read the relevant files and make a new edit only when it does not conflict. Report the state when it blocks a safe write.
@@ -51,7 +52,7 @@ If the worktree has changes, do not pull, reset, clean, or overwrite them. Read 
 Search before you create a file:
 
 ```bash
-rg -n -i "subject terms" /Users/amartyasingh/Documents/personal/obsidian/personal/codex /Users/amartyasingh/Documents/personal/obsidian/personal/projects /Users/amartyasingh/Documents/personal/obsidian/personal/knowledge
+rg -n -i "subject terms" "$vault_path/codex" "$vault_path/projects" "$vault_path/knowledge"
 ```
 
 - Update an existing useful note when it still has the same subject and purpose.

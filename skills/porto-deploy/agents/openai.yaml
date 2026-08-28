@@ -1,0 +1,4 @@
+interface:
+  display_name: "Porto Deploy"
+  short_description: "Deploy Avail services through Porto safely"
+  default_prompt: "Use $porto-deploy to deploy an Avail service through Porto and verify the result."

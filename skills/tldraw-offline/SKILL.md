@@ -10,7 +10,7 @@ Use this skill for tasks involving open tldraw Desktop files. The desktop app ex
 
 ## Server
 
-The default server is `http://localhost:7236`. If that port is not active, read the `port` from `/Users/amartyasingh/Library/Application Support/tldraw/server.json`.
+The default server is `http://localhost:7236`. If that port is not active, read the `port` from `$HOME/Library/Application Support/tldraw/server.json`.
 
 A clean quit removes `server.json`; the next launch rewrites it. It also records `pid` and `startedAt`, so if the file is present but requests to its `port` fail, treat it as stale (the app quit uncleanly) — the app is not running.
 
@@ -21,7 +21,7 @@ Every request except `GET /` and `/readme` needs the per-launch `token` from tha
 **Each Bash tool call runs in a fresh shell — exported env vars do NOT persist between calls.** A `TLDRAW_TOKEN` you `export` in one call is empty in the next, so the request sends `authorization: Bearer` with no token and 401s. "Export once and reuse" does not work here — re-establish the port and token on every call. Read them together at the top of each call (both stay fixed for the app's lifetime, so re-reading is cheap):
 
 ```bash
-PORT=$(jq -r .port '/Users/amartyasingh/Library/Application Support/tldraw/server.json'); TOKEN=$(jq -r .token '/Users/amartyasingh/Library/Application Support/tldraw/server.json')
+PORT=$(jq -r .port "$HOME/Library/Application Support/tldraw/server.json"); TOKEN=$(jq -r .token "$HOME/Library/Application Support/tldraw/server.json")
 # use as:  http://localhost:$PORT/...   -H "authorization: Bearer $TOKEN"
 ```
 
@@ -57,7 +57,7 @@ Most tasks do not require searching `api.members`. Start with these calls and se
 
 ```bash
 # Fresh shell per call: re-read port + token first (or use the values already in your context).
-PORT=$(jq -r .port '/Users/amartyasingh/Library/Application Support/tldraw/server.json'); TOKEN=$(jq -r .token '/Users/amartyasingh/Library/Application Support/tldraw/server.json')
+PORT=$(jq -r .port "$HOME/Library/Application Support/tldraw/server.json"); TOKEN=$(jq -r .token "$HOME/Library/Application Support/tldraw/server.json")
 
 # Pick the target doc by focused window or filename.
 curl -s -X POST http://localhost:$PORT/api/search \
@@ -180,7 +180,7 @@ Shown as raw `curl`; `sh "$HOME/skills/tldraw-offline/tq" <METHOD> <path> [body]
 
 ```bash
 # Fresh shell per call: re-read port + token (or use the values already in your context).
-PORT=$(jq -r .port '/Users/amartyasingh/Library/Application Support/tldraw/server.json'); TOKEN=$(jq -r .token '/Users/amartyasingh/Library/Application Support/tldraw/server.json')
+PORT=$(jq -r .port "$HOME/Library/Application Support/tldraw/server.json"); TOKEN=$(jq -r .token "$HOME/Library/Application Support/tldraw/server.json")
 
 # Discover docs.
 curl -s -X POST http://localhost:$PORT/api/search \
