@@ -1,46 +1,15 @@
-- When explaining something to the user, use the show-me skill
-- Be concise, direct, and candid. Challenge weak assumptions and distinguish verified facts from uncertainty
-- Ground research in authoritative, current sources and link important evidence
-- Preserve the original goal and constraints; finish authorized work end to end and verify the actual result before claiming completion
-- Ask questions only when a decision is materially ambiguous, risky, or requires approval
-- Use relevant skills; spawn subagents only for genuinely independent work and synthesize their findings
-- Keep changes focused and simple. Avoid unrelated edits, unnecessary abstractions, and low-signal tests
-- Test observable behavior, review substantial changes, and validate user-facing work in the real interface when applicable
-- Preserve unrelated work and never take destructive, production, or external actions beyond what the user authorized
-- Report meaningful blockers, outcomes, and evidence without noisy progress
+- Use the unslop skill for all writing to the user, not for product copy.
+- Use visualize or show-me when it makes an explanation clearer. Keep simple answers brief.
+- Make HTML reports for long or complex explanations. Use a simple, minimal design with a black background, white text, and Geist font. Use colors, charts, and diagrams when they help convey the meaning.
+- After completing work, clean up temporary worktrees, build outputs, and other resources you created. First preserve unique changes, untracked files, and required evidence. Leave pre-existing resources alone. Report anything retained and why.
+- Search narrowly and read only relevant sections. Summarize large tool results instead of dumping logs, transcripts, catalogs, or JSON. Before compaction or handoff, preserve a short summary of the goal, constraints, findings, checks, and next action.
 
-## Obsidian planning and research hub
+## Environment
 
-- For every non-trivial planning or research task, use the `obsidian-research-hub` skill.
-- Use `$HOME/Documents/personal/obsidian/personal` as the shared vault on macOS and `$HOME/code/obsidian-personal` on Linux.
-- Put Codex plans in `codex/plans/` and Codex research in `codex/research/`.
-- First search for an existing note about the same subject. Update it when it is still correct.
-- If a repository requires a plan or research file, keep that file in the repository as the main source. Add a short note in the vault that gives the repository path and the result.
-- Do not put secrets, access tokens, private keys, or full sensitive logs in the vault.
-- Do not commit or push vault changes unless the user asks for Git synchronization, or the current task explicitly includes it.
-- Writer and Obsidian use the same files. Open the platform-specific shared vault in Writer with `writer <vault-path>` when the user asks to view it.
+- You usually run inside T3 Code. Use its orchestration tools when they're available.
+- For browser work, use the T3 Code browser or Helium instead of Chrome.
 
-<!-- pstack:models:begin -->
-# pstack model configuration
+## Cross-provider delegation and shared skills
 
-Provider-qualified per-role choices. Read the installed pstack provider-dispatch reference before dispatching a configured role. Every documented role remains present. `inherit-parent` and `auto` use the parent model natively and still count as one panel lane.
-
-feature, refactoring: codex:gpt-5.6-terra@medium
-small bug-fix: codex:gpt-5.6-luna@medium
-bug-fix: codex:gpt-5.6-terra@medium
-perf-issue: codex:gpt-5.6-terra@medium
-hillclimb: codex:gpt-5.6-sol@high
-judgment and planning: codex:gpt-5.6-sol@high
-prose and docs: codex:gpt-5.6-luna@medium
-hardest tasks: codex:gpt-5.6-sol@high
-how explorer: codex:gpt-5.6-terra@medium
-how explainer: codex:gpt-5.6-terra@medium
-how critics: codex:gpt-5.6-terra@medium, codex:gpt-5.6-sol@high, codex:gpt-5.6-luna@medium
-why investigators, synthesizer: inherit-parent
-reflect tooling, judgment, divergent, synthesizer: inherit-parent
-arena runners: codex:gpt-5.6-terra@medium, codex:gpt-5.6-sol@high, codex:gpt-5.6-luna@medium
-arena cross-judge pool: codex:gpt-5.6-terra@medium, codex:gpt-5.6-sol@high, codex:gpt-5.6-luna@medium
-swarm workers: codex:gpt-5.6-terra@medium
-architect runners: codex:gpt-5.6-terra@medium, codex:gpt-5.6-sol@high, codex:gpt-5.6-luna@medium
-interrogate reviewers: codex:gpt-5.6-terra@medium, codex:gpt-5.6-sol@high, codex:gpt-5.6-luna@medium
-<!-- pstack:models:end -->
+- Claude delegates browser and native app interaction to Codex when that capability is available. Use T3 orchestration for those handoffs.
+- Both providers can use all installed skill instructions. When a skill is missing from your native list, read `~/Documents/projects/agent-toolkit/skills/machine-skills/SKILL.md` and search its live catalog. Read the original skill and relative resources; delegate when its required tools are available only in the other provider.

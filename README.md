@@ -9,9 +9,14 @@ multiple machines.
 agent-toolkit/
 ├── skills/                 -> ~/.codex/skills/<name>
 ├── agent-skills/           -> ~/.agents/skills/<name>
-└── config/codex/
-    ├── AGENTS.md           -> ~/.codex/AGENTS.md
-    └── pstack-models.md    -> ~/.codex/pstack-models.md
+├── config/skill-sources.tsv
+│                             -> provenance for every repository-owned skill
+├── config/external-skills.tsv
+│                             -> standalone packages documented, not vendored
+├── config/app-skill-links.tsv
+│                             -> selected Claude, OpenCode, Cursor, and Gemini links
+├── config/codex/           -> global instructions, portable config, plugin inventory
+└── config/hermes/          -> portable config and skill inventory
 
 ~/.codex/skills/.system   # Codex-managed; never linked or vendored here
 ```
@@ -21,31 +26,54 @@ plugins remain in Codex's plugin cache so their update mechanisms keep working.
 Each skill is linked individually; the script never replaces the containing
 `~/.codex/skills` directory.
 
+`config/app-skill-links.tsv` lists the repository skills shared with other
+agent apps. The same source directory is linked into each selected app, so a
+skill has one maintained copy without replacing app-managed skill folders.
+
+## Audited inventory
+
+The full-machine audit on 2026-09-02 found **410 active unique skill names**.
+The filesystem still has 1,221 physical `SKILL.md` files, including caches and
+duplicate copies. That is not a count of distinct capabilities.
+
+| Ownership | Unique names | Repository policy |
+| --- | ---: | --- |
+| `agent-toolkit` | 39 | Version the skill contents here |
+| Hermes | 83 | Record in `config/hermes/skills.tsv`; do not vendor |
+| Standalone upstream packages | 24 | Record in `config/external-skills.tsv`; do not vendor |
+| Codex plugin packages | 261 | Record packages in `config/codex/plugins.tsv`; do not vendor |
+| Codex `.system` | 6 | Codex-managed; do not vendor |
+| Residual bundled setup skill | 1 | App-managed; do not vendor |
+
+Those rows total 413 because `teach`, `github`, and `pdf` each appear in two
+ownership categories. Their union is 410. See `config/skill-sources.tsv` for
+the provenance of every repository-owned skill.
+
+Codex setup is documented in `config/codex/README.md`. Hermes setup is
+documented in `config/hermes/README.md`. The portable config files are merge
+references, not complete replacements for app-generated config files.
+
 ## Set up a machine
 
-Clone the repository with its pinned external skill, then run:
+Clone the repository, then run:
 
 ```bash
-git clone --recurse-submodules git@github.com:decocereus/agent-toolkit.git
+git clone git@github.com:decocereus/agent-toolkit.git
 cd agent-toolkit
 ./scripts/sync-skills.sh
 ./scripts/install-pstack.sh
 ./scripts/sync-skills.sh --check
 ```
 
-For an existing clone, initialize the external skill first:
-
-```bash
-git submodule update --init --recursive
-```
-
 The linker works on macOS and Linux. It replaces a global configuration file
 only when its bytes already match the repository and refuses every divergent
 file or directory. Restart Codex after the first setup so it reloads the
 catalog and global instructions.
-`cargo-cult` remains a pinned submodule because its upstream repository does
-not grant a redistribution license; this public repository stores only the
-upstream URL and commit for that skill.
+
+On a new machine, install Codex and Hermes first, clone this repository, run
+the linker and Pstack installer, install the packages listed in the inventories,
+then merge the portable Codex and Hermes settings. Finish with
+`./scripts/sync-skills.sh --check`.
 
 ## Capture newly installed skills
 

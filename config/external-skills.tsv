@@ -1,0 +1,27 @@
+# app	skill	source	status
+OpenCode	ab-test-setup	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	analytics-tracking	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	competitor-alternatives	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	copy-editing	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	copywriting	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	email-sequence	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	form-cro	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	free-tool-strategy	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	launch-strategy	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	marketing-ideas	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	marketing-psychology	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	onboarding-cro	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	page-cro	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	paid-ads	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	paywall-upgrade-cro	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	popup-cro	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	pricing-strategy	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	programmatic-seo	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	referral-program	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	schema-markup	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	seo-audit	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	signup-flow-cro	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	social-content	https://github.com/coreyhaines31/marketingskills	legacy local name
+OpenCode	remotion-best-practices	https://github.com/remotion-dev/skills	upstream package
+Agents	faceless-research	~/Documents/projects/faceless/docs/skill	linked from own repository
+Agents	impeccable	https://github.com/pbakaus/impeccable	upstream installer with per-app builds

@@ -1,3 +1,0 @@
-[submodule "agent-skills/cargo-cult"]
-	path = agent-skills/cargo-cult
-	url = https://github.com/waynesutton/cargo-cult.git

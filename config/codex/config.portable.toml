@@ -1,0 +1,55 @@
+# Portable user choices from ~/.codex/config.toml.
+# This file is documentation and a merge source. Do not replace the live file
+# wholesale because Codex also stores machine paths and generated state there.
+
+model = "gpt-5.6-sol"
+model_auto_compact_token_limit = 900000
+model_context_window = 1000000
+model_reasoning_effort = "medium"
+personality = "friendly"
+web_search = "live"
+approval_policy = "never"
+approvals_reviewer = "user"
+sandbox_mode = "danger-full-access"
+service_tier = "default"
+
+[features]
+apply_patch_freeform = true
+multi_agent = true
+default_mode_request_user_input = true
+shell_snapshot = true
+unified_exec = true
+memories = true
+chronicle = true
+goals = true
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 10
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "high"
+
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+ENABLE_TOOL_SEARCH = "true"
+
+[memories]
+disable_on_external_context = true
+
+[desktop]
+appearanceTheme = "dark"
+usePointerCursors = true
+followUpQueueMode = "queue"
+preventSleepWhileRunning = true
+keepRemoteControlAwakeWhilePluggedIn = true
+git-pull-request-merge-method = "squash"
+git-show-sidebar-pr-icons = true
+notifications-turn-mode = "always"
+show-context-window-usage = true
+worktree-keep-count = 5
+show-ultra-in-model-picker-slider = false
+conversationDetailMode = "STEPS_COMMANDS"
+realtimeVoiceScreenContextEnabled = true

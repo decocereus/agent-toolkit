@@ -33,6 +33,8 @@ script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd)
 repo_root=$(CDPATH= cd "$script_dir/.." && pwd)
 codex_source="$repo_root/skills"
 agents_source="$repo_root/agent-skills"
+app_links_file="$repo_root/config/app-skill-links.tsv"
+external_skills_file="$repo_root/config/external-skills.tsv"
 codex_config_source="$repo_root/config/codex"
 codex_home="${CODEX_HOME:-$HOME/.codex}"
 codex_target="$codex_home/skills"
@@ -61,6 +63,13 @@ report_error() {
   errors=$((errors + 1))
 }
 
+# Skills installed by their own upstream installer are recorded, not vendored.
+is_external_skill() {
+  awk -F '\t' -v app="$1" -v name="$2" \
+    '$1 == app && $2 == name { found = 1 } END { exit !found }' \
+    "$external_skills_file"
+}
+
 ensure_source_is_valid() {
   local source_root=$1
   local label=$2
@@ -83,6 +92,7 @@ import_live_skills() {
   local source_root=$1
   local target_root=$2
   local label=$3
+  local app=$4
   local live_path
   local name
   local source_path
@@ -96,6 +106,7 @@ import_live_skills() {
     [ "$name" = '.system' ] && continue
     [ -L "$live_path" ] && continue
     [ -f "$live_path/SKILL.md" ] || continue
+    is_external_skill "$app" "$name" && continue
 
     source_path="$source_root/$name"
     if [ -d "$live_path/.git" ]; then
@@ -169,6 +180,7 @@ check_for_unmanaged_skills() {
   local source_root=$1
   local target_root=$2
   local label=$3
+  local app=$4
   local live_path
   local name
 
@@ -177,12 +189,72 @@ check_for_unmanaged_skills() {
     [ -e "$live_path" ] || [ -L "$live_path" ] || continue
     name=$(basename "$live_path")
     [ "$name" = '.system' ] && continue
-    [ -L "$live_path" ] && continue
     [ -f "$live_path/SKILL.md" ] || continue
+    is_external_skill "$app" "$name" && continue
+    # A link into another repository is owned and versioned there.
+    if [ -L "$live_path" ]; then
+      case "$(CDPATH= cd "$live_path" && pwd -P)" in
+        "$repo_root"/*) ;;
+        *) continue ;;
+      esac
+    fi
     if [ ! -f "$source_root/$name/SKILL.md" ]; then
       report_error "$label skill is not in the repository: $live_path"
     fi
   done
+}
+
+link_app_skills() {
+  local target_relative
+  local source_collection
+  local name
+  local source_root
+  local source_path
+  local target_root
+  local live_path
+  local actual_target
+
+  if [ ! -f "$app_links_file" ]; then
+    report_error "portable app skill manifest is missing: $app_links_file"
+    return
+  fi
+
+  while IFS=$'\t' read -r target_relative source_collection name; do
+    case "$target_relative" in
+      ''|'#'*) continue ;;
+      /*|*../*|*/..|..) report_error "invalid app skill target: $target_relative"; continue ;;
+    esac
+
+    case "$source_collection" in
+      skills) source_root=$codex_source ;;
+      agent-skills) source_root=$agents_source ;;
+      *) report_error "invalid app skill source collection: $source_collection"; continue ;;
+    esac
+
+    source_path="$source_root/$name"
+    target_root="$HOME/$target_relative"
+    live_path="$target_root/$name"
+
+    if [ ! -f "$source_path/SKILL.md" ]; then
+      report_error "portable app skill source is missing: $source_path"
+    elif [ -L "$live_path" ]; then
+      actual_target=$(readlink "$live_path")
+      if [ "$actual_target" = "$source_path" ]; then
+        verified=$((verified + 1))
+      else
+        report_error "portable app skill points elsewhere: $live_path -> $actual_target"
+      fi
+    elif [ -e "$live_path" ]; then
+      report_error "portable app skill already exists and was not overwritten: $live_path"
+    elif [ "$mode" = check ]; then
+      report_error "portable app skill link is missing: $live_path"
+    else
+      mkdir -p "$target_root"
+      ln -s "$source_path" "$live_path"
+      linked=$((linked + 1))
+      printf 'linked portable app skill: %s\n' "$live_path"
+    fi
+  done < "$app_links_file"
 }
 
 validate_codex_config() {
@@ -200,8 +272,11 @@ validate_codex_config() {
 
   begin_count=$(grep -c '^<!-- pstack:models:begin -->$' "$agents_file" || true)
   end_count=$(grep -c '^<!-- pstack:models:end -->$' "$agents_file" || true)
+  if [ "$begin_count" -eq 0 ] && [ "$end_count" -eq 0 ]; then
+    return
+  fi
   if [ "$begin_count" -ne 1 ] || [ "$end_count" -ne 1 ]; then
-    report_error "Codex AGENTS.md must contain exactly one complete pstack model block"
+    report_error "Codex AGENTS.md must contain at most one complete pstack model block"
     return
   fi
 
@@ -262,14 +337,15 @@ if [ "$errors" -ne 0 ]; then
 fi
 
 if [ "$mode" = import ]; then
-  import_live_skills "$codex_source" "$codex_target" Codex
-  import_live_skills "$agents_source" "$agents_target" agent
+  import_live_skills "$codex_source" "$codex_target" Codex Codex
+  import_live_skills "$agents_source" "$agents_target" agent Agents
 fi
 
 link_skills "$codex_source" "$codex_target" Codex
 link_skills "$agents_source" "$agents_target" agent
-check_for_unmanaged_skills "$codex_source" "$codex_target" Codex
-check_for_unmanaged_skills "$agents_source" "$agents_target" agent
+link_app_skills
+check_for_unmanaged_skills "$codex_source" "$codex_target" Codex Codex
+check_for_unmanaged_skills "$agents_source" "$agents_target" agent Agents
 
 if [ "$mode" != check ]; then
   mkdir -p "$codex_home"

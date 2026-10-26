@@ -1,0 +1,48 @@
+# collection	skill	source_type	source
+skills	animate	adapted	https://animations.dev
+skills	animation-accessibility	adapted	https://animations.dev
+skills	animation-performance	adapted	https://animations.dev
+skills	animation-vocabulary	adapted	https://animations.dev
+skills	better-colors	upstream	https://github.com/jakubkrehel/skills
+skills	better-typography	upstream	https://github.com/jakubkrehel/skills
+skills	better-ui	upstream	https://github.com/jakubkrehel/skills
+skills	code-review	upstream	https://github.com/dmmulroy/skills
+skills	codebase-design	upstream	https://github.com/dmmulroy/skills
+skills	coding-standards	upstream	https://github.com/dmmulroy/skills
+skills	css-animations	adapted	https://animations.dev
+skills	diagnose	legacy-local	agent-toolkit import
+skills	emil-design-engineering	upstream	https://github.com/emilkowalski/skill
+skills	find-animation-opportunities	adapted	https://animations.dev
+skills	frontend-skill	local	agent-toolkit
+skills	graphify	local	agent-toolkit
+skills	hatch-pet	local	agent-toolkit
+skills	improve	upstream	https://github.com/shadcn/improve
+skills	improve-animations	adapted	https://animations.dev
+skills	improve-codebase-architecture	upstream	https://github.com/dmmulroy/skills
+skills	job-application-agent	local	agent-toolkit
+skills	motion-brief	adapted	https://animations.dev
+skills	motion-react	adapted	https://animations.dev
+skills	obsidian-research-hub	local	agent-toolkit
+skills	pick-ui-library	adapted	https://animations.dev
+skills	pit-of-success	local	agent-toolkit
+skills	porto-deploy	local	agent-toolkit
+skills	prototype	legacy-local	agent-toolkit import
+skills	review-animations	adapted	https://animations.dev
+skills	tldraw-offline	app-provided	tldraw Desktop
+skills	turborepo	upstream	https://github.com/vercel/turborepo
+skills	web-design-guidelines	upstream	Vercel, original URL not recorded
+skills	xcode-project	legacy-local	agent-toolkit initial import
+agent-skills	editor	upstream	https://github.com/diffusionstudio/skills
+agent-skills	install-anti-slop	upstream	https://github.com/dmmulroy/anti-slop
+agent-skills	show-me	upstream	https://github.com/humanlayer/skills
+agent-skills	teach	upstream	https://github.com/mattpocock/skills
+agent-skills	watch	upstream	https://github.com/diffusionstudio/skills
+skills	be-ambitious	upstream	https://github.com/DannyMac180/skills
+agent-skills	anatomy	upstream	https://github.com/wheresryan22/anatomy
+agent-skills	grill-me	upstream	https://github.com/mattpocock/skills
+agent-skills	reverse-engineer-anything	upstream	https://www.npmjs.com/package/rea-agents
+agent-skills	shaders	upstream	https://github.com/shader-effects-inc/shaders
+skills	india-equity-copilot	local	agent-toolkit
+skills	cross-provider-delegation	local	agent-toolkit
+skills	machine-skills	local	agent-toolkit
+skills	monid	upstream	https://monid.ai/SKILL.md

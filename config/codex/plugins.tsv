@@ -1,0 +1,42 @@
+# plugin_id	state	owner
+build-ios-apps@openai-curated	enabled	Codex Desktop remote plugin
+build-macos-apps@openai-curated	enabled	Codex Desktop remote plugin
+build-web-apps@openai-curated	enabled	Codex Desktop remote plugin
+github@openai-curated	enabled	Codex Desktop remote plugin
+vercel-plugin@plugins-cli	enabled	Codex plugin CLI
+documents@openai-primary-runtime	enabled	Codex primary runtime
+codex-security@openai-curated	enabled	Codex Desktop remote plugin
+slack@openai-curated	enabled	Codex Desktop remote plugin
+chrome@openai-bundled	enabled	Codex Desktop bundled plugin
+computer-use@openai-bundled	enabled	Codex Desktop bundled plugin
+pdf@openai-primary-runtime	enabled	Codex primary runtime
+spreadsheets@openai-primary-runtime	enabled	Codex primary runtime
+presentations@openai-primary-runtime	enabled	Codex primary runtime
+template-creator@openai-primary-runtime	enabled	Codex primary runtime
+visualize@openai-bundled	enabled	Codex Desktop bundled plugin
+browser@openai-bundled	enabled	Codex Desktop bundled plugin
+sites@openai-bundled	enabled	Codex Desktop bundled plugin
+computer-history@openai-bundled	enabled	Codex Desktop bundled plugin
+codex-app-tools@openai-bundled	enabled	Codex Desktop bundled plugin
+pstack@open-pstack	enabled	Pinned private marketplace
+unified-computer-use@openai-bundled	enabled	Codex Desktop bundled plugin
+build-ios-apps@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+build-macos-apps@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+build-web-apps@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+cloudflare@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+codex-security@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+convex@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+creative-production@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+data-analytics@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+deep-research-work@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+github@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+gmail@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+google-drive@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+investment-banking@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+notion@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+openai-developers@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+openai-templates@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+plugin-management@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+product-design@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+public-equity-investing@openai-curated-remote	remote-installed	Codex Desktop remote plugin
+slack@openai-curated-remote	remote-installed	Codex Desktop remote plugin
