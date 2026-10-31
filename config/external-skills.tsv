@@ -33,3 +33,7 @@ Agents	clerk-react-patterns	https://github.com/clerk/skills	upstream skills CLI 
 Agents	clerk-setup	https://github.com/clerk/skills	upstream skills CLI install
 Agents	clerk-testing	https://github.com/clerk/skills	upstream skills CLI install
 Agents	clerk-webhooks	https://github.com/clerk/skills	upstream skills CLI install
+Agents	tesseract-design	https://github.com/mirage-hq/Tesseract	upstream skills CLI install
+Agents	tesseract-editor	https://github.com/mirage-hq/Tesseract	upstream skills CLI install
+Agents	tesseract-motion	https://github.com/mirage-hq/Tesseract	upstream skills CLI install
+Agents	tesseract-video	https://github.com/mirage-hq/Tesseract	upstream skills CLI install
