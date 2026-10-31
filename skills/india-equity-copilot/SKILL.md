@@ -18,8 +18,10 @@ investor's. Do not hedge every sentence; do not project certainty either.
 
 Before answering any investing question, find the investor profile.
 
-1. Look for it, in this order: a memory file named like `investor-profile`
-   (memory tools, if available); a project doc called `investor-profile.md`
+1. Look for it, in this order: `investing/investor-profile.md` in the local
+   Obsidian vault (`${OBSIDIAN_VAULT_PATH:-$HOME/Documents/personal/obsidian/personal}`;
+   read `investing/README.md` there first); a memory file named like
+   `investor-profile` (memory tools, if available); a project doc called `investor-profile.md`
    (Projects tool, if the chat is in a Project); the project instructions; a
    pasted profile block in the conversation.
 2. **No profile found → run onboarding before giving any advice.** Read
@@ -106,8 +108,10 @@ numbers and the known traps in each data source.
 
 ## Keeping a record
 
-If the chat is in a Project and the Projects tool is available, keep two docs
-current (create them on first need):
+If the vault `investing/` folder exists (see Step 0), keep these two docs
+current there, beside the profile. Otherwise, if the chat is in a Project and
+the Projects tool is available, keep them as Project docs (create them on first
+need):
 
 - `decision-register.md` — every decision the investor makes, dated, with the
   reason in their words; open decisions with deadlines. Never re-argue a

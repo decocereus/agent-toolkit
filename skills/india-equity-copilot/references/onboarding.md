@@ -147,6 +147,10 @@ for your specific patterns.*
    and how often. Give one line of reasoning each.
 4. Show the profile to them and ask: "Anything wrong or missing?" Apply edits.
 5. **Save it** (in this order of preference):
+   - The local Obsidian vault is available → write `investing/investor-profile.md`
+     there, with `README.md`, `decision-register.md` and `positions-and-levels.md`
+     beside it, and link the folder from the vault `INDEX.md`. Add a short
+     memory pointer to it if memory is on.
    - Memory is available → save the profile to memory (one file, e.g.
      `investor-profile`) — only after they confirm. Respect memory privacy
      rules: do not store account numbers, PAN, or anything they ask you not to.
