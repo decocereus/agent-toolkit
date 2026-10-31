@@ -13,3 +13,8 @@
 
 - Claude delegates browser and native app interaction to Codex when that capability is available. Use T3 orchestration for those handoffs.
 - Both providers can use all installed skill instructions. When a skill is missing from your native list, read `~/Documents/projects/agent-toolkit/skills/machine-skills/SKILL.md` and search its live catalog. Read the original skill and relative resources; delegate when its required tools are available only in the other provider.
+
+## PR workflow skills (from tstack)
+
+- "babysit", "watch", or "monitor" a PR means the `babysit-pr` skill, not `pstack:babysit`, including inside poteto-mode runs.
+- Council members, all at high reasoning effort: Claude Opus 5.5 (Claude), GPT-6.1 Sol (Codex), and DeepSeek V4.1 Flash (OpenCode, `opencode/deepseek-v4.1-flash`, not the `-free` variant). If one is unavailable, report it instead of substituting.

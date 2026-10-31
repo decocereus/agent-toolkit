@@ -25,3 +25,11 @@ OpenCode	social-content	https://github.com/coreyhaines31/marketingskills	legacy 
 OpenCode	remotion-best-practices	https://github.com/remotion-dev/skills	upstream package
 Agents	faceless-research	~/Documents/projects/faceless/docs/skill	linked from own repository
 Agents	impeccable	https://github.com/pbakaus/impeccable	upstream installer with per-app builds
+Agents	clerk-backend-api	https://github.com/clerk/skills	upstream skills CLI install
+Agents	clerk-cli	https://github.com/clerk/skills	upstream skills CLI install
+Agents	clerk-custom-ui	https://github.com/clerk/skills	upstream skills CLI install
+Agents	clerk-orgs	https://github.com/clerk/skills	upstream skills CLI install
+Agents	clerk-react-patterns	https://github.com/clerk/skills	upstream skills CLI install
+Agents	clerk-setup	https://github.com/clerk/skills	upstream skills CLI install
+Agents	clerk-testing	https://github.com/clerk/skills	upstream skills CLI install
+Agents	clerk-webhooks	https://github.com/clerk/skills	upstream skills CLI install
