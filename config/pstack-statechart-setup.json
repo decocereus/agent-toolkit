@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-10-30",
+  "source": "https://x.com/poteto/status/2115880102601101414",
+  "upstream": "https://github.com/cursor/plugins",
+  "upstream_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe",
+  "pstack_version": "0.15.36",
+  "skills": [
+    "statechart",
+    "create-formal-verification-skill",
+    "maintain-formal-verification-skill"
+  ],
+  "local_targets": [
+    "Codex",
+    "Claude Code",
+    "OpenCode",
+    "Cursor",
+    "Gemini",
+    "Hermes"
+  ],
+  "grok_bot": {
+    "status": "already installed",
+    "evidence": "Native Connect Apps UI showed Pstack Uninstall, 58 skills, and all three requested skill names."
+  },
+  "runtime": {
+    "manager": "mise",
+    "java": "temurin-25",
+    "tlc": "1.7.4",
+    "renderer": "pele@1.9.0",
+    "renderer_directory": "~/.local/share/pstack-statechart-renderer"
+  },
+  "verification": {
+    "upstream_blob_hashes_matched": 409,
+    "skill_links_checked": 18,
+    "sync_check": "141 verified, no missing links",
+    "valid_model_exit": 0,
+    "broken_model_exit": 1,
+    "valid_report": "# InstallCheck\n\nTLC reached 3 states and 3 steps. The chart draws 3 states and 2 arrows.\nThe chart does not draw 1 steps that stay in one chart state.\n\n## Rules that hold\nSafe, NoDeadlock\n",
+    "broken_report": "# InstallCheck\n\nTLC reached 3 states and 3 steps. The chart draws 3 states and 2 arrows.\nThe chart does not draw 1 steps that stay in one chart state.\n\n## Safe breaks\nThe shortest path has 2 steps:\n0. Ready\n1. continue: Running\n2. continue: Done\n\n## Rules that hold\nNoDeadlock\n",
+    "svg_rendered": true
+  },
+  "existing_pstack_fork": "preserved",
+  "cleanup": "Temporary model, reports, graph, SVG, and pointer removed after recording results."
+}
