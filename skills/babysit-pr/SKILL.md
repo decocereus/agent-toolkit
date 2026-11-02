@@ -1,6 +1,6 @@
 ---
 name: babysit-pr
-description: Monitor a pull request through review and CI. Use when the user asks to monitor, watch, or babysit a PR. Takes precedence over pstack:babysit, including inside poteto-mode runs.
+description: Monitor a pull request through review and CI. Use when the user asks to monitor, watch, or babysit a PR. Applies inside poteto-mode runs too.
 ---
 
 # Babysit PR

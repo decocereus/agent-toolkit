@@ -1,6 +1,6 @@
 # Codex setup
 
-`AGENTS.md` and `pstack-models.md` are linked into `~/.codex` by
+`AGENTS.md` is linked into `~/.codex` by
 `scripts/sync-skills.sh`.
 
 `config.portable.toml` records portable user choices from the live Codex

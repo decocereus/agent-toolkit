@@ -24,7 +24,6 @@ OpenCode	signup-flow-cro	https://github.com/coreyhaines31/marketingskills	legacy
 OpenCode	social-content	https://github.com/coreyhaines31/marketingskills	legacy local name
 OpenCode	remotion-best-practices	https://github.com/remotion-dev/skills	upstream package
 Agents	faceless-research	~/Documents/projects/faceless/docs/skill	linked from own repository
-Agents	impeccable	https://github.com/pbakaus/impeccable	upstream installer with per-app builds
 Agents	clerk-backend-api	https://github.com/clerk/skills	upstream skills CLI install
 Agents	clerk-cli	https://github.com/clerk/skills	upstream skills CLI install
 Agents	clerk-custom-ui	https://github.com/clerk/skills	upstream skills CLI install

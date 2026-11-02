@@ -15,8 +15,7 @@ agent-toolkit/
 │                             -> standalone packages documented, not vendored
 ├── config/app-skill-links.tsv
 │                             -> selected Claude, OpenCode, Cursor, and Gemini links
-├── config/codex/           -> global instructions, portable config, plugin inventory
-└── config/hermes/          -> portable config and skill inventory
+└── config/codex/           -> global instructions, portable config, plugin inventory
 
 ~/.codex/skills/.system   # Codex-managed; never linked or vendored here
 ```
@@ -39,7 +38,6 @@ duplicate copies. That is not a count of distinct capabilities.
 | Ownership | Unique names | Repository policy |
 | --- | ---: | --- |
 | `agent-toolkit` | 39 | Version the skill contents here |
-| Hermes | 83 | Record in `config/hermes/skills.tsv`; do not vendor |
 | Standalone upstream packages | 24 | Record in `config/external-skills.tsv`; do not vendor |
 | Codex plugin packages | 261 | Record packages in `config/codex/plugins.tsv`; do not vendor |
 | Codex `.system` | 6 | Codex-managed; do not vendor |
@@ -49,9 +47,9 @@ Those rows total 413 because `teach`, `github`, and `pdf` each appear in two
 ownership categories. Their union is 410. See `config/skill-sources.tsv` for
 the provenance of every repository-owned skill.
 
-Codex setup is documented in `config/codex/README.md`. Hermes setup is
-documented in `config/hermes/README.md`. The portable config files are merge
-references, not complete replacements for app-generated config files.
+Codex setup is documented in `config/codex/README.md`. The portable config
+files are merge references, not complete replacements for app-generated config
+files.
 
 ## Set up a machine
 
@@ -61,7 +59,7 @@ Clone the repository, then run:
 git clone git@github.com:decocereus/agent-toolkit.git
 cd agent-toolkit
 ./scripts/sync-skills.sh
-./scripts/install-pstack.sh
+npx -y github:chhoumann/t3-pstack install
 ./scripts/sync-skills.sh --check
 ```
 
@@ -70,9 +68,9 @@ only when its bytes already match the repository and refuses every divergent
 file or directory. Restart Codex after the first setup so it reloads the
 catalog and global instructions.
 
-On a new machine, install Codex and Hermes first, clone this repository, run
-the linker and Pstack installer, install the packages listed in the inventories,
-then merge the portable Codex and Hermes settings. Finish with
+On a new machine, install Codex first, clone this repository, run
+the linker and the t3-pstack installer, install the packages listed in the inventories,
+then merge the portable Codex settings. Finish with
 `./scripts/sync-skills.sh --check`.
 
 ## Capture newly installed skills
@@ -104,12 +102,10 @@ Global user skills are tracked under `agent-skills/` and exposed through
 `~/.agents/skills`. Plugin and `.system` skills are installed and updated by
 Codex in its managed folders.
 
-Open Pstack is the exception to using its upstream marketplace directly. This
-setup relies on a private OpenAI-only routing fork; install it with the pinned
-installer after cloning this repository. The GitHub account on the machine must
-have access to `decocereus/open-pstack-openai`. If `open-pstack` is already
-configured from another source, inspect it and then run
-`./scripts/install-pstack.sh --replace`.
+pstack comes from one source, [chhoumann/t3-pstack](https://github.com/chhoumann/t3-pstack).
+Its installer sets up every Claude and Codex home T3 can run and its marketplaces
+auto-update. Check it with `npx -y github:chhoumann/t3-pstack doctor`, and set the
+model sheet with `/t3-pstack:setup-pstack` in a T3 thread.
 
 The collection was usage-audited on 2026-07-10 against local Codex task history.
 Tracked removals remain recoverable from Git history.

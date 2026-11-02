@@ -259,35 +259,9 @@ link_app_skills() {
 
 validate_codex_config() {
   local agents_file="$codex_config_source/AGENTS.md"
-  local sheet_file="$codex_config_source/pstack-models.md"
-  local begin_count
-  local end_count
-  local block
-  local sheet
 
-  if [ ! -f "$agents_file" ] || [ ! -f "$sheet_file" ]; then
+  if [ ! -f "$agents_file" ]; then
     report_error "Codex configuration source is incomplete: $codex_config_source"
-    return
-  fi
-
-  begin_count=$(grep -c '^<!-- pstack:models:begin -->$' "$agents_file" || true)
-  end_count=$(grep -c '^<!-- pstack:models:end -->$' "$agents_file" || true)
-  if [ "$begin_count" -eq 0 ] && [ "$end_count" -eq 0 ]; then
-    return
-  fi
-  if [ "$begin_count" -ne 1 ] || [ "$end_count" -ne 1 ]; then
-    report_error "Codex AGENTS.md must contain at most one complete pstack model block"
-    return
-  fi
-
-  block=$(awk '
-    /^<!-- pstack:models:begin -->$/ { capture=1; next }
-    /^<!-- pstack:models:end -->$/ { capture=0; next }
-    capture { print }
-  ' "$agents_file")
-  sheet=$(cat "$sheet_file")
-  if [ "$block" != "$sheet" ]; then
-    report_error "Codex AGENTS.md pstack block differs from pstack-models.md"
   fi
 }
 
@@ -351,7 +325,6 @@ if [ "$mode" != check ]; then
   mkdir -p "$codex_home"
 fi
 link_config_file "$codex_config_source/AGENTS.md" "$codex_home/AGENTS.md" "Codex global instructions"
-link_config_file "$codex_config_source/pstack-models.md" "$codex_home/pstack-models.md" "pstack model sheet"
 
 if [ "$errors" -ne 0 ]; then
   printf 'Skill sync failed with %d conflict(s).\n' "$errors" >&2

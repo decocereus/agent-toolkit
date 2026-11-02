@@ -76,10 +76,10 @@ tools cannot drive the requested surface, report that limitation.
 
 ## Shared skills and session boundaries
 
-Use `machine-skills` to find skill instructions from either provider's installed
-directories and plugin caches. Read the chosen `SKILL.md` and its relative
-resources from their original location. Instructions can be shared; plugin tools
-and app connections still need to be available in the executing provider.
+Portable skills are linked into both providers' skill directories. Read the
+chosen `SKILL.md` and its relative resources before starting. Instructions can be
+shared; plugin tools and app connections still need to be available in the
+executing provider.
 
 CLI children do not inherit the parent transcript, T3 browser handles, or its
 MCP connections. They are separate CLI sessions, so summarize their results in T3.
