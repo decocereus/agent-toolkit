@@ -1,111 +1,67 @@
 # agent-toolkit
 
-Shared scripts, guardrails, and personal agent skills that can be used from
-multiple machines.
-
-## Skill layout
+Personal agent skills and global agent instructions, shared across machines.
 
 ```text
 agent-toolkit/
-├── skills/                 -> ~/.codex/skills/<name>
-├── agent-skills/           -> ~/.agents/skills/<name>
-├── config/skill-sources.tsv
-│                             -> provenance for every repository-owned skill
-├── config/external-skills.tsv
-│                             -> standalone packages documented, not vendored
-├── config/app-skill-links.tsv
-│                             -> selected Claude, OpenCode, Cursor, and Gemini links
-└── config/codex/           -> global instructions, portable config, plugin inventory
-
-~/.codex/skills/.system   # Codex-managed; never linked or vendored here
+├── skills/                     every skill this repo owns, one folder each
+├── config/
+│   ├── AGENTS.md               global instructions, used by Claude and Codex
+│   ├── app-skill-links.tsv     which skills link into Claude, OpenCode, Cursor, Gemini
+│   ├── skill-sources.tsv       where each skill came from
+│   ├── external-skills.tsv     skills installed by their own installers, not stored here
+│   └── codex/                  reference notes for setting up Codex, not read by any script
+└── sync-skills.sh              creates the links from this repo into each app
 ```
 
-The repository owns user-installed skills. Codex still owns `.system`, and
-plugins remain in Codex's plugin cache so their update mechanisms keep working.
-Each skill is linked individually; the script never replaces the containing
-`~/.codex/skills` directory.
-
-`config/app-skill-links.tsv` lists the repository skills shared with other
-agent apps. The same source directory is linked into each selected app, so a
-skill has one maintained copy without replacing app-managed skill folders.
-
-## Audited inventory
-
-The full-machine audit on 2026-09-02 found **410 active unique skill names**.
-The filesystem still has 1,221 physical `SKILL.md` files, including caches and
-duplicate copies. That is not a count of distinct capabilities.
-
-| Ownership | Unique names | Repository policy |
-| --- | ---: | --- |
-| `agent-toolkit` | 39 | Version the skill contents here |
-| Standalone upstream packages | 24 | Record in `config/external-skills.tsv`; do not vendor |
-| Codex plugin packages | 261 | Record packages in `config/codex/plugins.tsv`; do not vendor |
-| Codex `.system` | 6 | Codex-managed; do not vendor |
-| Residual bundled setup skill | 1 | App-managed; do not vendor |
-
-Those rows total 413 because `teach`, `github`, and `pdf` each appear in two
-ownership categories. Their union is 410. See `config/skill-sources.tsv` for
-the provenance of every repository-owned skill.
-
-Codex setup is documented in `config/codex/README.md`. The portable config
-files are merge references, not complete replacements for app-generated config
-files.
+Each skill has one copy, in `skills/`. Every skill links into `~/.codex/skills`.
+The rows in `config/app-skill-links.tsv` link skills into the other apps.
+`config/AGENTS.md` links to `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`.
 
 ## Set up a machine
 
-Clone the repository, then run:
+Install Codex and Claude Code first, then run:
 
 ```bash
 git clone git@github.com:decocereus/agent-toolkit.git
 cd agent-toolkit
-./scripts/sync-skills.sh
+./sync-skills.sh
 npx -y github:chhoumann/t3-pstack install
-./scripts/sync-skills.sh --check
+./sync-skills.sh --check
 ```
 
-The linker works on macOS and Linux. It replaces a global configuration file
-only when its bytes already match the repository and refuses every divergent
-file or directory. Restart Codex after the first setup so it reloads the
-catalog and global instructions.
+The script works on macOS and Linux. It refuses to overwrite a file or folder
+that differs from the repository. Restart Codex afterwards so it reloads its
+skills and instructions.
 
-On a new machine, install Codex first, clone this repository, run
-the linker and the t3-pstack installer, install the packages listed in the inventories,
-then merge the portable Codex settings. Finish with
-`./scripts/sync-skills.sh --check`.
+## Add a skill
 
-## Capture newly installed skills
+Create `skills/<name>/SKILL.md` and run `./sync-skills.sh`. To share it beyond
+Codex, add a row to `config/app-skill-links.tsv` first. Record its origin in
+`config/skill-sources.tsv`.
 
-Install skills into their normal user location, then adopt them into the
-repository:
+To adopt a skill already installed in `~/.codex/skills`, run:
 
 ```bash
-./scripts/sync-skills.sh --import
-./scripts/sync-skills.sh --check
-git status --short
+./sync-skills.sh --import
+./sync-skills.sh --check
 ```
 
-`--import` moves valid skills containing `SKILL.md` into the corresponding
-repository directory and links them back. It refuses divergent copies and
-nested Git repositories so that it cannot silently discard independent history.
-Review, commit, and push the imported files before pulling on another machine.
+`--import` moves it into `skills/` and links it back. It refuses divergent copies
+and nested Git repositories.
 
-## Curation boundaries
+## What does not belong here
 
-Keep the collection intentional:
+- Plugin skills. Their plugins install and update them.
+- Codex's `.system` skills. Codex manages them.
+- Skills with their own installer, such as Clerk and Tesseract. List these in
+  `config/external-skills.tsv`.
 
-- Keep skills that have been used repeatedly or encode a genuinely unique workflow.
-- Prefer installed, maintained plugins over vendored copies of the same capability.
-- Remove speculative bundles and skills with no observed use.
-- Do not copy plugin or Codex-managed `.system` skills into this repository.
+`skills/unslop` is the exception. It is a copy from t3-pstack with
+`disable-model-invocation` removed, so agents can load it themselves. Upstream
+changes to `unslop` have to be copied over by hand.
 
-Global user skills are tracked under `agent-skills/` and exposed through
-`~/.agents/skills`. Plugin and `.system` skills are installed and updated by
-Codex in its managed folders.
-
-pstack comes from one source, [chhoumann/t3-pstack](https://github.com/chhoumann/t3-pstack).
-Its installer sets up every Claude and Codex home T3 can run and its marketplaces
-auto-update. Check it with `npx -y github:chhoumann/t3-pstack doctor`, and set the
-model sheet with `/t3-pstack:setup-pstack` in a T3 thread.
-
-The collection was usage-audited on 2026-07-10 against local Codex task history.
-Tracked removals remain recoverable from Git history.
+pstack comes from [chhoumann/t3-pstack](https://github.com/chhoumann/t3-pstack).
+Its marketplaces auto-update. Check it with
+`npx -y github:chhoumann/t3-pstack doctor`, and set the model sheet with
+`/t3-pstack:setup-pstack` in a T3 thread.

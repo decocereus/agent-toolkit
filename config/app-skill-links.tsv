@@ -1,86 +1,89 @@
-# Target path relative to $HOME	Source collection	Skill name
-.claude/skills	skills	animate
-.claude/skills	skills	animation-accessibility
-.claude/skills	skills	animation-performance
-.claude/skills	skills	animation-vocabulary
-.claude/skills	skills	css-animations
-.claude/skills	skills	emil-design-engineering
-.claude/skills	skills	find-animation-opportunities
-.claude/skills	skills	improve-animations
-.claude/skills	skills	motion-brief
-.claude/skills	skills	motion-react
-.claude/skills	skills	pick-ui-library
-.claude/skills	skills	review-animations
-.config/opencode/skills	skills	animate
-.config/opencode/skills	skills	animation-accessibility
-.config/opencode/skills	skills	animation-performance
-.config/opencode/skills	skills	animation-vocabulary
-.config/opencode/skills	skills	css-animations
-.config/opencode/skills	skills	emil-design-engineering
-.config/opencode/skills	skills	find-animation-opportunities
-.config/opencode/skills	skills	improve-animations
-.config/opencode/skills	skills	motion-brief
-.config/opencode/skills	skills	motion-react
-.config/opencode/skills	skills	pick-ui-library
-.config/opencode/skills	skills	prototype
-.config/opencode/skills	skills	review-animations
-.cursor/skills	skills	animate
-.cursor/skills	skills	animation-accessibility
-.cursor/skills	skills	animation-performance
-.cursor/skills	skills	animation-vocabulary
-.cursor/skills	skills	css-animations
-.cursor/skills	skills	emil-design-engineering
-.cursor/skills	skills	find-animation-opportunities
-.cursor/skills	skills	improve-animations
-.cursor/skills	skills	motion-brief
-.cursor/skills	skills	motion-react
-.cursor/skills	skills	pick-ui-library
-.cursor/skills	skills	prototype
-.cursor/skills	skills	review-animations
-.gemini/skills	skills	emil-design-engineering
-.claude/skills	skills	cross-provider-delegation
-.claude/skills	skills	hatch-pet
-.claude/skills	skills	improve
-.claude/skills	skills	obsidian-research-hub
-.claude/skills	skills	porto-deploy
-.claude/skills	skills	prototype
-.claude/skills	skills	turborepo
-.claude/skills	skills	web-design-guidelines
-.claude/skills	skills	xcode-project
-.claude/skills	agent-skills	editor
-.claude/skills	agent-skills	install-anti-slop
-.claude/skills	agent-skills	show-me
-.claude/skills	agent-skills	teach
-.claude/skills	agent-skills	watch
-.claude/skills	skills	be-ambitious
-.config/opencode/skills	skills	be-ambitious
-.cursor/skills	skills	be-ambitious
-.gemini/skills	skills	be-ambitious
-.claude/skills	skills	india-equity-copilot
-.config/opencode/skills	skills	india-equity-copilot
-.cursor/skills	skills	india-equity-copilot
-.gemini/skills	skills	india-equity-copilot
-.claude/skills	skills	babysit-pr
-.claude/skills	skills	unslop
-.claude/skills	skills	council
-.claude/skills	skills	file-pr
-.claude/skills	skills	full-send
-.claude/skills	skills	full-stop
-.claude/skills	skills	leaving-pr-comments
-.claude/skills	skills	modernize
-.claude/skills	skills	sol-loop
-.claude/skills	skills	takeover
-.config/opencode/skills	skills	babysit-pr
-.config/opencode/skills	skills	unslop
-.config/opencode/skills	skills	council
-.config/opencode/skills	skills	file-pr
-.config/opencode/skills	skills	full-send
-.config/opencode/skills	skills	full-stop
-.config/opencode/skills	skills	leaving-pr-comments
-.config/opencode/skills	skills	modernize
-.config/opencode/skills	skills	sol-loop
-.config/opencode/skills	skills	takeover
-.claude/skills	agent-skills	impeccable
-.cursor/skills	agent-skills	impeccable
-.gemini/skills	agent-skills	impeccable
-.config/opencode/skills	agent-skills	impeccable
+# Target path relative to $HOME	Skill name
+.claude/skills	animate
+.claude/skills	animation-accessibility
+.claude/skills	animation-performance
+.claude/skills	animation-vocabulary
+.claude/skills	css-animations
+.claude/skills	emil-design-engineering
+.claude/skills	find-animation-opportunities
+.claude/skills	improve-animations
+.claude/skills	motion-brief
+.claude/skills	motion-react
+.claude/skills	pick-ui-library
+.claude/skills	review-animations
+.config/opencode/skills	animate
+.config/opencode/skills	animation-accessibility
+.config/opencode/skills	animation-performance
+.config/opencode/skills	animation-vocabulary
+.config/opencode/skills	css-animations
+.config/opencode/skills	emil-design-engineering
+.config/opencode/skills	find-animation-opportunities
+.config/opencode/skills	improve-animations
+.config/opencode/skills	motion-brief
+.config/opencode/skills	motion-react
+.config/opencode/skills	pick-ui-library
+.config/opencode/skills	prototype
+.config/opencode/skills	review-animations
+.cursor/skills	animate
+.cursor/skills	animation-accessibility
+.cursor/skills	animation-performance
+.cursor/skills	animation-vocabulary
+.cursor/skills	css-animations
+.cursor/skills	emil-design-engineering
+.cursor/skills	find-animation-opportunities
+.cursor/skills	improve-animations
+.cursor/skills	motion-brief
+.cursor/skills	motion-react
+.cursor/skills	pick-ui-library
+.cursor/skills	prototype
+.cursor/skills	review-animations
+.gemini/skills	emil-design-engineering
+.claude/skills	cross-provider-delegation
+.claude/skills	hatch-pet
+.claude/skills	improve
+.claude/skills	obsidian-research-hub
+.claude/skills	porto-deploy
+.claude/skills	prototype
+.claude/skills	turborepo
+.claude/skills	web-design-guidelines
+.claude/skills	xcode-project
+.claude/skills	editor
+.claude/skills	install-anti-slop
+.claude/skills	show-me
+.claude/skills	teach
+.claude/skills	watch
+.claude/skills	be-ambitious
+.config/opencode/skills	be-ambitious
+.cursor/skills	be-ambitious
+.gemini/skills	be-ambitious
+.claude/skills	india-equity-copilot
+.config/opencode/skills	india-equity-copilot
+.cursor/skills	india-equity-copilot
+.gemini/skills	india-equity-copilot
+.claude/skills	babysit-pr
+.claude/skills	unslop
+.claude/skills	council
+.claude/skills	file-pr
+.claude/skills	full-send
+.claude/skills	full-stop
+.claude/skills	leaving-pr-comments
+.claude/skills	modernize
+.claude/skills	sol-loop
+.claude/skills	takeover
+.config/opencode/skills	babysit-pr
+.config/opencode/skills	unslop
+.config/opencode/skills	council
+.config/opencode/skills	file-pr
+.config/opencode/skills	full-send
+.config/opencode/skills	full-stop
+.config/opencode/skills	leaving-pr-comments
+.config/opencode/skills	modernize
+.config/opencode/skills	sol-loop
+.config/opencode/skills	takeover
+.claude/skills	impeccable
+.cursor/skills	impeccable
+.gemini/skills	impeccable
+.config/opencode/skills	impeccable
+.claude/skills	anatomy
+.claude/skills	grill-me
+.claude/skills	shaders

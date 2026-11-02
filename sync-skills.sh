@@ -4,9 +4,9 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-Usage: scripts/sync-skills.sh [--check | --import]
+Usage: ./sync-skills.sh [--check | --import]
 
-  no option  Link repository skills and global Codex configuration.
+  no option  Link repository skills and the global agent instructions.
   --check    Verify that every repository skill is linked correctly and that
              no valid live skill is missing from the repository.
   --import   Move valid, unmanaged live skills into the repository, then link
@@ -29,13 +29,11 @@ if [ "$#" -gt 1 ]; then
   exit 2
 fi
 
-script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd)
-repo_root=$(CDPATH= cd "$script_dir/.." && pwd)
-codex_source="$repo_root/skills"
-agents_source="$repo_root/agent-skills"
+repo_root=$(CDPATH= cd "$(dirname "$0")" && pwd)
+skills_source="$repo_root/skills"
 app_links_file="$repo_root/config/app-skill-links.tsv"
 external_skills_file="$repo_root/config/external-skills.tsv"
-codex_config_source="$repo_root/config/codex"
+instructions_source="$repo_root/config/AGENTS.md"
 codex_home="${CODEX_HOME:-$HOME/.codex}"
 codex_target="$codex_home/skills"
 agents_target="$HOME/.agents/skills"
@@ -206,9 +204,7 @@ check_for_unmanaged_skills() {
 
 link_app_skills() {
   local target_relative
-  local source_collection
   local name
-  local source_root
   local source_path
   local target_root
   local live_path
@@ -219,19 +215,13 @@ link_app_skills() {
     return
   fi
 
-  while IFS=$'\t' read -r target_relative source_collection name; do
+  while IFS=$'\t' read -r target_relative name; do
     case "$target_relative" in
       ''|'#'*) continue ;;
       /*|*../*|*/..|..) report_error "invalid app skill target: $target_relative"; continue ;;
     esac
 
-    case "$source_collection" in
-      skills) source_root=$codex_source ;;
-      agent-skills) source_root=$agents_source ;;
-      *) report_error "invalid app skill source collection: $source_collection"; continue ;;
-    esac
-
-    source_path="$source_root/$name"
+    source_path="$skills_source/$name"
     target_root="$HOME/$target_relative"
     live_path="$target_root/$name"
 
@@ -255,14 +245,6 @@ link_app_skills() {
       printf 'linked portable app skill: %s\n' "$live_path"
     fi
   done < "$app_links_file"
-}
-
-validate_codex_config() {
-  local agents_file="$codex_config_source/AGENTS.md"
-
-  if [ ! -f "$agents_file" ]; then
-    report_error "Codex configuration source is incomplete: $codex_config_source"
-  fi
 }
 
 link_config_file() {
@@ -301,9 +283,10 @@ link_config_file() {
   fi
 }
 
-ensure_source_is_valid "$codex_source" Codex
-ensure_source_is_valid "$agents_source" agent
-validate_codex_config
+ensure_source_is_valid "$skills_source" repository
+if [ ! -f "$instructions_source" ]; then
+  report_error "global instructions are missing: $instructions_source"
+fi
 
 if [ "$errors" -ne 0 ]; then
   printf 'Skill sync failed with %d source error(s).\n' "$errors" >&2
@@ -311,20 +294,19 @@ if [ "$errors" -ne 0 ]; then
 fi
 
 if [ "$mode" = import ]; then
-  import_live_skills "$codex_source" "$codex_target" Codex Codex
-  import_live_skills "$agents_source" "$agents_target" agent Agents
+  import_live_skills "$skills_source" "$codex_target" Codex Codex
 fi
 
-link_skills "$codex_source" "$codex_target" Codex
-link_skills "$agents_source" "$agents_target" agent
+link_skills "$skills_source" "$codex_target" Codex
 link_app_skills
-check_for_unmanaged_skills "$codex_source" "$codex_target" Codex Codex
-check_for_unmanaged_skills "$agents_source" "$agents_target" agent Agents
+check_for_unmanaged_skills "$skills_source" "$codex_target" Codex Codex
+check_for_unmanaged_skills "$skills_source" "$agents_target" agent Agents
 
 if [ "$mode" != check ]; then
-  mkdir -p "$codex_home"
+  mkdir -p "$codex_home" "$HOME/.claude"
 fi
-link_config_file "$codex_config_source/AGENTS.md" "$codex_home/AGENTS.md" "Codex global instructions"
+link_config_file "$instructions_source" "$codex_home/AGENTS.md" "Codex global instructions"
+link_config_file "$instructions_source" "$HOME/.claude/CLAUDE.md" "Claude global instructions"
 
 if [ "$errors" -ne 0 ]; then
   printf 'Skill sync failed with %d conflict(s).\n' "$errors" >&2

@@ -1,8 +1,5 @@
 # Codex setup
 
-`AGENTS.md` is linked into `~/.codex` by
-`scripts/sync-skills.sh`.
-
 `config.portable.toml` records portable user choices from the live Codex
 configuration. It is deliberately not linked over `~/.codex/config.toml`.
 Codex stores machine paths, project trust, runtime MCP definitions, hook hashes,
