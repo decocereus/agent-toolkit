@@ -10,7 +10,7 @@ agent-toolkit/
 │   ├── app-skill-links.tsv     which skills link into Claude, OpenCode, Cursor, Gemini
 │   ├── skill-sources.tsv       where each skill came from
 │   ├── external-skills.tsv     skills installed by their own installers, not stored here
-│   └── codex/                  reference notes for setting up Codex, not read by any script
+│   └── codex/                  a snapshot of the Codex plugin list, not read by any script
 └── sync-skills.sh              creates the links from this repo into each app
 ```
 
