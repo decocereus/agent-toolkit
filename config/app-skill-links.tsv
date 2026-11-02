@@ -61,6 +61,7 @@
 .cursor/skills	skills	india-equity-copilot
 .gemini/skills	skills	india-equity-copilot
 .claude/skills	skills	babysit-pr
+.claude/skills	skills	unslop
 .claude/skills	skills	council
 .claude/skills	skills	file-pr
 .claude/skills	skills	full-send
@@ -70,6 +71,7 @@
 .claude/skills	skills	sol-loop
 .claude/skills	skills	takeover
 .config/opencode/skills	skills	babysit-pr
+.config/opencode/skills	skills	unslop
 .config/opencode/skills	skills	council
 .config/opencode/skills	skills	file-pr
 .config/opencode/skills	skills	full-send

@@ -33,6 +33,7 @@ skills	india-equity-copilot	local	agent-toolkit
 skills	cross-provider-delegation	local	agent-toolkit
 skills	monid	upstream	https://monid.ai/SKILL.md
 skills	babysit-pr	adapted	https://github.com/t3dotgg/tstack
+skills	unslop	adapted	https://github.com/chhoumann/t3-pstack
 skills	council	adapted	https://github.com/t3dotgg/tstack
 skills	file-pr	adapted	https://github.com/t3dotgg/tstack
 skills	full-send	adapted	https://github.com/t3dotgg/tstack

@@ -1,4 +1,4 @@
-- Always apply the unslop skill to all writing to the user, not to product copy. It can't auto-load, so before your first reply in a session, read the newest `~/.claude/plugins/cache/t3-pstack/t3-pstack/*/skills/unslop/SKILL.md` (in Codex, `~/.codex/plugins/cache/t3-pstack/t3-pstack/*/skills/unslop/SKILL.md`) and follow it.
+- Always apply the unslop skill to all writing to the user, not to product copy. Load it before your first reply in a session.
 - Use visualize or show-me when it makes an explanation clearer. Keep simple answers brief.
 - Make HTML reports for long or complex explanations. Use a simple, minimal design with a black background, white text, and Geist font. Use colors, charts, and diagrams when they help convey the meaning.
 - After completing work, clean up temporary worktrees, build outputs, and other resources you created. First preserve unique changes, untracked files, and required evidence. Leave pre-existing resources alone. Report anything retained and why.
