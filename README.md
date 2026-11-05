@@ -40,6 +40,10 @@ Create `skills/<name>/SKILL.md` and run `./sync-skills.sh`. To share it beyond
 Codex, add a row to `config/app-skill-links.tsv` first. Record its origin in
 `config/skill-sources.tsv`.
 
+The `add-skill` skill does all of this end to end. It takes a GitHub URL, a local
+folder, or a new draft, lands it on `main`, syncs every machine, and confirms that
+Claude Code, Codex, and OpenCode load it.
+
 To adopt a skill already installed in `~/.codex/skills`, run:
 
 ```bash

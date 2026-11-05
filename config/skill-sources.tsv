@@ -44,3 +44,5 @@ sol-loop	adapted	https://github.com/t3dotgg/tstack
 takeover	adapted	https://github.com/t3dotgg/tstack
 impeccable	upstream	https://github.com/pbakaus/impeccable
 stageshow	upstream	https://github.com/benjitaylor/skills
+security-audit	upstream	https://github.com/cloudflare/security-audit-skill
+add-skill	local	agent-toolkit

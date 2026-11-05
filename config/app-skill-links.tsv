@@ -89,3 +89,7 @@
 .claude/skills	shaders
 .claude/skills	stageshow
 .config/opencode/skills	stageshow
+.claude/skills	security-audit
+.config/opencode/skills	security-audit
+.claude/skills	add-skill
+.config/opencode/skills	add-skill
