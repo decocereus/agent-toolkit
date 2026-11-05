@@ -100,14 +100,15 @@ codex_lists() {
 }
 
 opencode_lists() {
-  local name=$1 password port pid body='' attempt found=1
+  local name=$1 password port pid reaper body='' found=1
+  local deadline=$((SECONDS + 45))
   password=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
   port=$((40000 + RANDOM % 20000))
   (cd "$repo_root" && OPENCODE_SERVER_PASSWORD=$password exec opencode serve --hostname 127.0.0.1 --port "$port") >/dev/null 2>&1 </dev/null &
   pid=$!
   # The server fills this list in stages after it starts, so a partial list proves nothing.
-  for attempt in $(seq 1 120); do
-    body=$(curl -sf -u "opencode:$password" "http://127.0.0.1:$port/api/skill" 2>/dev/null || true)
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    body=$(curl -sf --max-time 5 -u "opencode:$password" "http://127.0.0.1:$port/api/skill" 2>/dev/null || true)
     if grep -qE "\"name\": *\"$name\"" <<<"$body"; then
       found=0
       break
@@ -115,7 +116,10 @@ opencode_lists() {
     sleep 0.25
   done
   kill "$pid" 2>/dev/null || true
+  (sleep 5; kill -9 "$pid" 2>/dev/null) >/dev/null 2>&1 &
+  reaper=$!
   wait "$pid" 2>/dev/null || true
+  kill "$reaper" 2>/dev/null || true
   return "$found"
 }
 
