@@ -100,22 +100,23 @@ codex_lists() {
 }
 
 opencode_lists() {
-  local name=$1 password port pid body='' attempt
+  local name=$1 password port pid body='' attempt found=1
   password=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
   port=$((40000 + RANDOM % 20000))
   (cd "$repo_root" && OPENCODE_SERVER_PASSWORD=$password exec opencode serve --hostname 127.0.0.1 --port "$port") >/dev/null 2>&1 </dev/null &
   pid=$!
-  # The server answers with an empty list until it has finished scanning skills.
+  # The server fills this list in stages after it starts, so a partial list proves nothing.
   for attempt in $(seq 1 120); do
     body=$(curl -sf -u "opencode:$password" "http://127.0.0.1:$port/api/skill" 2>/dev/null || true)
-    case "$body" in
-      *'"name"'*) break ;;
-    esac
+    if grep -qE "\"name\": *\"$name\"" <<<"$body"; then
+      found=0
+      break
+    fi
     sleep 0.25
   done
   kill "$pid" 2>/dev/null || true
   wait "$pid" 2>/dev/null || true
-  grep -qE "\"name\": *\"$name\"" <<<"$body"
+  return "$found"
 }
 
 check_loader() {
