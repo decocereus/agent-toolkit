@@ -69,7 +69,7 @@ git pull --ff-only
 ./skills/add-skill/add-skill.sh verify <name>
 ```
 
-Do the current machine yourself. For another machine, find it with `t3_environment_links`, read `orchestrator_capabilities` with its `environmentId`, then call `delegate_task` with that `target.environmentId` and a brief holding the checkout path and these commands. Tell the child to return the full output, and to change nothing if the pull fails. Use `ssh` only when no T3 link answers.
+Do the current machine yourself. For another machine, find it with `t3_environment_links`, read `orchestrator_capabilities` with its `environmentId`, pick the project whose root contains the checkout from `t3_project_list`, then call `delegate_task` with that `target.environmentId` and `target.projectId` and a brief holding the checkout path and these commands. Tell the child to return the full output, and to change nothing if the pull fails. Retry once with a new agent if it fails before running a command. Use `ssh` only when no T3 link answers.
 
 The verify command decides the result, not the exit code of `sync-skills.sh`. That script still creates the links when it reports a conflict with another skill, then exits 1. Report such conflicts to the user and leave them alone. A conflict naming the new skill means it was not linked, so show it to the user and stop.
 
