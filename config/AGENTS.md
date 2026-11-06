@@ -1,5 +1,6 @@
 - Always apply the unslop skill to all writing to the user, not to product copy. Load it before your first reply in a session.
 - Use visualize or show-me when it makes an explanation clearer. Keep simple answers brief.
+- rended images and visuals in-line in t3code whenever possible
 - After completing work, clean up temporary worktrees, build outputs, and other resources you created. First preserve unique changes, untracked files, and required evidence. Leave pre-existing resources alone. Report anything retained and why.
 - Search narrowly and read only relevant sections. Summarize large tool results instead of dumping logs, transcripts, catalogs, or JSON. Before compaction or handoff, preserve a short summary of the goal, constraints, findings, checks, and next action.
 
