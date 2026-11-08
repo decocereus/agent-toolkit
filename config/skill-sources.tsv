@@ -47,3 +47,4 @@ stageshow	upstream	https://github.com/benjitaylor/skills
 security-audit	upstream	https://github.com/cloudflare/security-audit-skill
 add-skill	local	agent-toolkit
 perspective-illusion	adapted	https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion
+blank-page	upstream	https://github.com/StewdioAI/blank-page
