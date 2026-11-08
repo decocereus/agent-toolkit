@@ -48,3 +48,4 @@ security-audit	upstream	https://github.com/cloudflare/security-audit-skill
 add-skill	local	agent-toolkit
 perspective-illusion	adapted	https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion
 blank-page	upstream	https://github.com/StewdioAI/blank-page
+cinecode	upstream	https://github.com/sarpstar/cinecode@67f9807 (runtime files only)
