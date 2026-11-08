@@ -36,3 +36,5 @@ Agents	tesseract-design	https://github.com/mirage-hq/Tesseract	upstream skills C
 Agents	tesseract-editor	https://github.com/mirage-hq/Tesseract	upstream skills CLI install
 Agents	tesseract-motion	https://github.com/mirage-hq/Tesseract	upstream skills CLI install
 Agents	tesseract-video	https://github.com/mirage-hq/Tesseract	upstream skills CLI install
+Codex	treg	https://treg.to/install.sh	installed by treg installer
+Codex	make-ugc	https://treg.to/install.sh	installed by treg skill install
