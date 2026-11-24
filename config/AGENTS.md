@@ -7,7 +7,7 @@
 ## Environment
 
 - You usually run inside T3 Code. Use its orchestration tools when they're available.
-- For browser work, use the T3 Code browser or Helium instead of Chrome.
+- For browser work, use the T3 Code browser or Ardia instead of Chrome.
 
 ## Cross-provider delegation and shared skills
 
